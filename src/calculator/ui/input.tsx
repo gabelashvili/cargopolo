@@ -1,4 +1,4 @@
-import type { InputHTMLAttributes, ReactNode } from 'react'
+import { forwardRef, type InputHTMLAttributes, type ReactNode, type Ref } from 'react'
 import { NumericFormat, type NumericFormatProps } from 'react-number-format'
 import './input.scss'
 
@@ -9,9 +9,10 @@ type BaseInputProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange' | '
   startIcon?: ReactNode
   endIcon?: ReactNode
   required?: boolean
+  rootClassName?: string
 }
 
-type InputProps = BaseInputProps &
+export type InputProps = BaseInputProps &
   (
     | {
         type?: Exclude<InputHTMLAttributes<HTMLInputElement>['type'], 'number'>
@@ -19,16 +20,15 @@ type InputProps = BaseInputProps &
     | ({ type: 'number' } & Omit<NumericFormatProps, 'onValueChange' | 'customInput' | 'value' | 'type'>)
   )
 
-const InputWrapper = (
-  props: Omit<InputProps, 'onChange' | 'label'> & {
-    onChange?: React.ChangeEventHandler<HTMLInputElement>
-  }
-) => {
-  return <input {...props} />
-}
+const InputWrapper = forwardRef<
+  HTMLInputElement,
+  Omit<InputProps, 'onChange' | 'label'> & { onChange?: React.ChangeEventHandler<HTMLInputElement> }
+>((props, ref) => {
+  return <input ref={ref} {...props} />
+})
 
-const Input = (props: InputProps) => {
-  const { label, placeholder, startIcon, endIcon, required, ...restProps } = props
+const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
+  const { label, placeholder, startIcon, endIcon, required, rootClassName, ...restProps } = props
   const hasValue = props.value !== undefined && props.value !== '' && props.value !== null
   const hasStartIcon = !!startIcon
   const hasEndIcon = !!endIcon
@@ -42,15 +42,18 @@ const Input = (props: InputProps) => {
     .filter(Boolean)
     .join(' ')
 
+  const rootClasses = ['input-root', rootClassName].filter(Boolean).join(' ')
+
   if (props.type === 'number') {
     const { onChange, ...numericProps } = restProps
     return (
-      <div className="input-root">
+      <div className={rootClasses}>
         {label && <label className="input-label">{label}</label>}
         <div className={wrapperClasses}>
           {startIcon && <span className="input-icon input-icon-start">{startIcon}</span>}
           <NumericFormat
             {...(numericProps as NumericFormatProps)}
+            getInputRef={ref as Ref<HTMLInputElement>}
             onValueChange={values => {
               onChange?.(values.value)
             }}
@@ -71,11 +74,11 @@ const Input = (props: InputProps) => {
 
   const { onChange, ...inputProps } = restProps
   return (
-    <div className="input-root">
+    <div className={rootClasses}>
       {label && <label className="input-label">{label}</label>}
       <div className={wrapperClasses}>
         {startIcon && <span className="input-icon input-icon-start">{startIcon}</span>}
-        <InputWrapper {...inputProps} onChange={e => onChange?.(e.target.value)} placeholder=" " />
+        <InputWrapper ref={ref} {...inputProps} onChange={e => onChange?.(e.target.value)} placeholder=" " />
         {placeholder && (
           <label className="input-placeholder">
             {placeholder}
@@ -86,6 +89,6 @@ const Input = (props: InputProps) => {
       </div>
     </div>
   )
-}
+})
 
 export default Input

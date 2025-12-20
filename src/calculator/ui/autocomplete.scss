@@ -1,0 +1,89 @@
+$dropdown-background: #fff;
+$dropdown-border-color: #e0e0e0;
+$dropdown-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+$option-highlighted-bg: #f0f0f0;
+$option-selected-bg: #e8f5e9;
+$option-text-color: #323232;
+$option-selected-color: #41ad49;
+
+.autocomplete-root {
+  position: relative;
+
+  .autocomplete-toggle {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .autocomplete-clear {
+    font-size: 18px;
+    line-height: 1;
+    color: #999;
+
+    &:hover {
+      color: #666;
+    }
+  }
+
+  .autocomplete-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    margin: 4px 0 0;
+    padding: 0;
+    list-style: none;
+    background-color: $dropdown-background;
+    border: 1px solid $dropdown-border-color;
+    border-radius: 4px;
+    box-shadow: $dropdown-shadow;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 100;
+
+    &::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: #ccc;
+      border-radius: 3px;
+    }
+  }
+
+  .autocomplete-option {
+    padding: 12px 16px;
+    font-size: 14px;
+    color: $option-text-color;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+
+    &:hover,
+    &.highlighted {
+      background-color: $option-highlighted-bg;
+    }
+
+    &.selected {
+      background-color: $option-selected-bg;
+      color: $option-selected-color;
+      font-weight: 500;
+    }
+
+    &.autocomplete-no-options,
+    &.autocomplete-loading {
+      color: #999;
+      cursor: default;
+      text-align: center;
+
+      &:hover {
+        background-color: transparent;
+      }
+    }
+  }
+}
+
