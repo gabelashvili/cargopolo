@@ -123,17 +123,23 @@ $input-icon-spacing: 12px;
     // Adjust padding when icons are present
     &.has-start-icon {
       input {
-        padding-left: calc(#{$input-icon-spacing} + #{$input-icon-size} + 8px) !important;
+        padding-left: calc(
+          #{$input-icon-spacing} + #{$input-icon-size} + 8px
+        ) !important;
       }
 
       .input-placeholder {
-        left: calc(#{$input-icon-spacing} + #{$input-icon-size} + 8px) !important;
+        left: calc(
+          #{$input-icon-spacing} + #{$input-icon-size} + 8px
+        ) !important;
       }
     }
 
     &.has-end-icon {
       input {
-        padding-right: calc(#{$input-icon-spacing} + #{$input-icon-size} + 8px) !important;
+        padding-right: calc(
+          #{$input-icon-spacing} + #{$input-icon-size} + 8px
+        ) !important;
       }
     }
   }

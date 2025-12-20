@@ -86,13 +86,36 @@ const Autocomplete = ({
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+      if (!wrapperRef.current || !isOpen) return
+
+      const target = event.target as HTMLElement
+      const path = event.composedPath()
+
+      // Check if click is on the input itself
+      const isInput = inputRef.current && (path.includes(inputRef.current) || target === inputRef.current)
+
+      // Check if click is inside the dropdown
+      const isDropdown = listRef.current && (path.includes(listRef.current) || listRef.current.contains(target))
+
+      // Check if click is on the label (which should close the dropdown)
+      const isLabel = target.classList.contains('input-label') || target.closest('.input-label')
+
+      // Check if click is on the toggle/clear icon
+      const isToggle = target.closest('.autocomplete-toggle') || target.closest('.autocomplete-clear')
+
+      // Close if:
+      // 1. Click is outside the wrapper entirely, OR
+      // 2. Click is on the label (and dropdown is open), OR
+      // 3. Click is not on input, dropdown, or toggle
+      if (isLabel || (!isInput && !isDropdown && !isToggle)) {
         closeDropdown()
       }
     }
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => document.removeEventListener('mousedown', handleClickOutside)
-  }, [])
+
+    // Use capture phase to catch events before they bubble
+    document.addEventListener('mousedown', handleClickOutside, true)
+    return () => document.removeEventListener('mousedown', handleClickOutside, true)
+  }, [isOpen])
 
   useEffect(() => {
     if (isOpen && highlightedIndex >= 0 && listRef.current) {
@@ -100,6 +123,34 @@ const Autocomplete = ({
       item?.scrollIntoView({ block: 'nearest' })
     }
   }, [highlightedIndex, isOpen])
+
+  // Add native click handlers for Shadow DOM compatibility
+  useEffect(() => {
+    const listElement = listRef.current
+    if (!listElement || !isOpen) return
+
+    const handleNativeClick = (e: MouseEvent) => {
+      const target = e.target as HTMLElement
+      const optionElement = target.closest('[data-option-index]')
+      if (optionElement) {
+        const index = parseInt(optionElement.getAttribute('data-option-index') || '-1', 10)
+        if (index >= 0 && index < filteredOptions.length) {
+          e.preventDefault()
+          e.stopPropagation()
+          e.stopImmediatePropagation()
+          const option = filteredOptions[index]
+          onChange?.(option)
+          closeDropdown()
+          inputRef.current?.blur()
+        }
+      }
+    }
+
+    listElement.addEventListener('click', handleNativeClick, true)
+    return () => {
+      listElement.removeEventListener('click', handleNativeClick, true)
+    }
+  }, [isOpen, filteredOptions, onChange])
 
   const handleInputChange = (newValue: string | number) => {
     const strValue = String(newValue)
@@ -206,12 +257,25 @@ const Autocomplete = ({
               const isSelected = value?.value === option.value
 
               return (
-                <div onClick={() => handleOptionClick(option)} onMouseEnter={() => setHighlightedIndex(index)}>
+                <div
+                  key={option.value}
+                  data-option-index={index}
+                  onMouseDown={e => {
+                    // Prevent the click outside handler from firing and handle click immediately
+                    e.preventDefault()
+                    e.stopPropagation()
+                    // Access native event for stopImmediatePropagation
+                    if (e.nativeEvent) {
+                      e.nativeEvent.stopImmediatePropagation()
+                    }
+                    handleOptionClick(option)
+                  }}
+                  onMouseEnter={() => setHighlightedIndex(index)}
+                >
                   {renderOption ? (
                     renderOption({ option, isHighlighted, isSelected })
                   ) : (
                     <li
-                      key={option.value}
                       className={`autocomplete-option ${isHighlighted ? 'highlighted' : ''} ${isSelected ? 'selected' : ''}`}
                     >
                       {option.label}

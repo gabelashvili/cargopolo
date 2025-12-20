@@ -1,31 +1,41 @@
 // Import all styles for Shadow DOM
-@use '../calculator/styles/fonts.scss';
-@use '../calculator/styles/mixins.scss';
-@use '../calculator/components/calculator.scss';
-@use '../calculator/components/header/header.scss';
-@use '../calculator/ui/input.scss';
-@use '../calculator/ui/autocomplete.scss';
+@use "../calculator/styles/fonts.scss";
+@use "../calculator/styles/mixins.scss";
+@use "../calculator/components/calculator.scss";
+@use "../calculator/components/header/header.scss";
+@use "../calculator/ui/input.scss";
+@use "../calculator/ui/autocomplete.scss";
 
 // Base reset for Shadow DOM
 :host {
   all: initial !important;
   display: block !important;
-  font-family: 'Helvetica Neue', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  font-family:
+    "Helvetica Neue",
+    -apple-system,
+    BlinkMacSystemFont,
+    sans-serif !important;
   box-sizing: border-box !important;
   line-height: 1.5 !important;
   font-size: 14px !important;
 }
 
-*, *::before, *::after {
+*,
+*::before,
+*::after {
   box-sizing: border-box !important;
 }
 
-img, svg {
+img,
+svg {
   max-width: 100% !important;
   height: auto !important;
 }
 
-button, input, select, textarea {
+button,
+input,
+select,
+textarea {
   font-family: inherit !important;
   font-size: inherit !important;
 }

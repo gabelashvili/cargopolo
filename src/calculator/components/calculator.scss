@@ -1,5 +1,5 @@
 // Calculator SCSS Test File
-@use '../styles/fonts.scss' as *;
+@use "../styles/fonts.scss" as *;
 
 * {
   padding: 0 !important;
@@ -7,7 +7,11 @@
   box-sizing: border-box !important;
 }
 
-$calculator-background-gradient: linear-gradient(135deg, #00a76f 0%, #007867 100%);
+$calculator-background-gradient: linear-gradient(
+  135deg,
+  #00a76f 0%,
+  #007867 100%
+);
 
 .calculator {
   background: $calculator-background-gradient !important;
