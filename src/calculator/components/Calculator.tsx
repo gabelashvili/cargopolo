@@ -11,7 +11,7 @@ const Calculator = () => {
         <div>b</div>
         <div>c</div>
         <div>d</div>
-        <Input onChange={(e) => {console.log(e)}} type="text"  />
+        <Input onChange={(e) => {console.log(e)}} type="text" label="Amount" placeholder='Enter amount' />
       </div>
     </div>
   )
