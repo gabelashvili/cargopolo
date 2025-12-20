@@ -3,10 +3,7 @@ interface IconProps {
   color?: string;
 }
 
-export const DollarIcon = ({
-  size = 20,
-  color = "currentColor",
-}: IconProps) => (
+export const DollarIcon = ({ size = 20, color = "currentColor" }: IconProps) => (
   <svg
     width={size}
     height={size}
@@ -22,10 +19,7 @@ export const DollarIcon = ({
   </svg>
 );
 
-export const SearchIcon = ({
-  size = 20,
-  color = "currentColor",
-}: IconProps) => (
+export const SearchIcon = ({ size = 20, color = "currentColor" }: IconProps) => (
   <svg
     width={size}
     height={size}
@@ -74,10 +68,7 @@ export const EyeIcon = ({ size = 20, color = "currentColor" }: IconProps) => (
   </svg>
 );
 
-export const EyeOffIcon = ({
-  size = 20,
-  color = "currentColor",
-}: IconProps) => (
+export const EyeOffIcon = ({ size = 20, color = "currentColor" }: IconProps) => (
   <svg
     width={size}
     height={size}
@@ -93,10 +84,7 @@ export const EyeOffIcon = ({
   </svg>
 );
 
-export const ChevronDownIcon = ({
-  size = 20,
-  color = "currentColor",
-}: IconProps) => (
+export const ChevronDownIcon = ({ size = 20, color = "currentColor" }: IconProps) => (
   <svg
     width={size}
     height={size}
@@ -111,10 +99,7 @@ export const ChevronDownIcon = ({
   </svg>
 );
 
-export const CalendarIcon = ({
-  size = 20,
-  color = "currentColor",
-}: IconProps) => (
+export const CalendarIcon = ({ size = 20, color = "currentColor" }: IconProps) => (
   <svg
     width={size}
     height={size}

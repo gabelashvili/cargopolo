@@ -1,17 +1,17 @@
-import type { ReactNode } from 'react'
+import type { ReactNode } from "react";
 
 export interface TargetConfig {
-  selector: string
-  insertPosition: 'before' | 'after' | 'prepend' | 'append'
+  selector: string;
+  insertPosition: "before" | "after" | "prepend" | "append";
 }
 
 export interface SectionConfig {
-  id: string
-  name: string
-  targets: TargetConfig | TargetConfig[]
-  component: () => ReactNode
+  id: string;
+  name: string;
+  targets: TargetConfig | TargetConfig[];
+  component: () => ReactNode;
 }
 
 export interface SectionRegistry {
-  [key: string]: SectionConfig
+  [key: string]: SectionConfig;
 }
