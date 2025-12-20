@@ -7,83 +7,87 @@ $option-text-color: #323232;
 $option-selected-color: #41ad49;
 
 .autocomplete-root {
-  position: relative;
+  position: relative !important;
 
   .autocomplete-toggle {
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    cursor: pointer !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
   }
 
   .autocomplete-clear {
-    font-size: 18px;
-    line-height: 1;
-    color: #999;
+    font-size: 18px !important;
+    line-height: 1 !important;
+    color: #999 !important;
 
     &:hover {
-      color: #666;
+      color: #666 !important;
     }
   }
 
   .autocomplete-dropdown {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    margin: 4px 0 0;
-    padding: 0;
-    list-style: none;
-    background-color: $dropdown-background;
-    border: 1px solid $dropdown-border-color;
-    border-radius: 4px;
-    box-shadow: $dropdown-shadow;
-    max-height: 200px;
-    overflow-y: auto;
-    z-index: 100;
+    position: absolute !important;
+    top: 100% !important;
+    left: 0 !important;
+    right: 0 !important;
+    margin: 4px 0 0 !important;
+    padding: 0 !important;
+    list-style: none !important;
+    background-color: $dropdown-background !important;
+    border: 1px solid $dropdown-border-color !important;
+    border-radius: 4px !important;
+    box-shadow: $dropdown-shadow !important;
+    max-height: 200px !important;
+    overflow-y: auto !important;
+    z-index: 100 !important;
 
     &::-webkit-scrollbar {
-      width: 6px;
+      width: 6px !important;
     }
 
     &::-webkit-scrollbar-track {
-      background: transparent;
+      background: transparent !important;
     }
 
     &::-webkit-scrollbar-thumb {
-      background-color: #ccc;
-      border-radius: 3px;
+      background-color: #ccc !important;
+      border-radius: 3px !important;
     }
   }
 
   .autocomplete-option {
-    padding: 12px 16px;
-    font-size: 14px;
-    color: $option-text-color;
-    cursor: pointer;
-    transition: background-color 0.15s ease;
+    padding: 12px 16px !important;
+    font-size: 14px !important;
+    color: $option-text-color !important;
+    cursor: pointer !important;
+    transition: background-color 0.15s ease !important;
+    margin: 0 !important;
+    border: none !important;
+    display: block !important;
+    width: 100% !important;
+    text-align: left !important;
 
     &:hover,
     &.highlighted {
-      background-color: $option-highlighted-bg;
+      background-color: $option-highlighted-bg !important;
     }
 
     &.selected {
-      background-color: $option-selected-bg;
-      color: $option-selected-color;
-      font-weight: 500;
+      background-color: $option-selected-bg !important;
+      color: $option-selected-color !important;
+      font-weight: 500 !important;
     }
 
     &.autocomplete-no-options,
     &.autocomplete-loading {
-      color: #999;
-      cursor: default;
-      text-align: center;
+      color: #999 !important;
+      cursor: default !important;
+      text-align: center !important;
 
       &:hover {
-        background-color: transparent;
+        background-color: transparent !important;
       }
     }
   }
 }
-

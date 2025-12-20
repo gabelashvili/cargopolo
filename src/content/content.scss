@@ -8,25 +8,24 @@
 
 // Base reset for Shadow DOM
 :host {
-  all: initial;
-  display: block;
-  font-family: 'Helvetica Neue', -apple-system, BlinkMacSystemFont, sans-serif;
-  box-sizing: border-box;
-  line-height: 1.5;
-  font-size: 14px;
+  all: initial !important;
+  display: block !important;
+  font-family: 'Helvetica Neue', -apple-system, BlinkMacSystemFont, sans-serif !important;
+  box-sizing: border-box !important;
+  line-height: 1.5 !important;
+  font-size: 14px !important;
 }
 
 *, *::before, *::after {
-  box-sizing: border-box;
+  box-sizing: border-box !important;
 }
 
 img, svg {
-  max-width: 100%;
-  height: auto;
+  max-width: 100% !important;
+  height: auto !important;
 }
 
 button, input, select, textarea {
-  font-family: inherit;
-  font-size: inherit;
+  font-family: inherit !important;
+  font-size: inherit !important;
 }
-

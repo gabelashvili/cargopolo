@@ -4,9 +4,11 @@ $calculator-header-border-color: #41ad49;
 
 .calculator {
   &-header {
-    border-bottom: 2px solid $calculator-header-border-color;
-    height: fit-content;
-    padding: 20px;
-    @include center-item;
+    border-bottom: 2px solid $calculator-header-border-color !important;
+    height: fit-content !important;
+    padding: 20px !important;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
   }
 }

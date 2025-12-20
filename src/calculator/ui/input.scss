@@ -12,130 +12,141 @@ $input-icon-size: 20px;
 $input-icon-spacing: 12px;
 
 .input-root {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
 
   .input-wrapper {
-    position: relative;
-    width: 100%;
+    position: relative !important;
+    width: 100% !important;
 
     input {
-      width: 100%;
-      padding-left: 16px;
-      padding-right: 16px;
-      padding-top: 24px;
-      padding-bottom: 12px;
-      border: 1px solid $input-border-color;
-      border-radius: 4px;
-      background-color: $input-background;
-      color: $input-text-color;
-      font-size: 14px;
-      outline: none;
-      transition: $input-transition;
+      width: 100% !important;
+      padding-left: 16px !important;
+      padding-right: 16px !important;
+      padding-top: 26px !important;
+      padding-bottom: 10px !important;
+      border: 1px solid $input-border-color !important;
+      border-radius: 4px !important;
+      background-color: $input-background !important;
+      color: $input-text-color !important;
+      font-size: 14px !important;
+      outline: none !important;
+      transition: $input-transition !important;
+      margin: 0 !important;
+      line-height: normal !important;
+      height: auto !important;
 
       &:focus {
-        border-color: $input-border-focus-color;
-        box-shadow: 0 0 0 3px rgba(100, 108, 255, 0.1);
+        border-color: $input-border-focus-color !important;
+        box-shadow: 0 0 0 3px rgba(100, 108, 255, 0.1) !important;
       }
 
       &:focus + .input-placeholder,
       &:not(:placeholder-shown) + .input-placeholder,
       &[value]:not([value=""]) + .input-placeholder {
-        top: 12px;
-        font-size: 11px;
-        color: $input-placeholder-color-active;
-        transform: translateY(0);
+        top: 12px !important;
+        font-size: 11px !important;
+        color: $input-placeholder-color-active !important;
+        transform: translateY(0) !important;
       }
 
       &::placeholder {
-        opacity: 0;
-        transition: opacity 0.3s ease;
+        opacity: 0 !important;
+        transition: opacity 0.3s ease !important;
       }
 
       &:focus::placeholder {
-        opacity: 0.5;
+        opacity: 0.5 !important;
       }
     }
 
     .input-placeholder {
-      position: absolute;
-      left: 16px;
-      top: 52.5%;
-      transform: translateY(-52%);
-      color: $input-placeholder-color;
-      font-size: 14px;
-      pointer-events: none;
-      transition: $input-transition;
-      background-color: $input-background;
-      padding: 0;
+      position: absolute !important;
+      left: 16px !important;
+      top: 52.5% !important;
+      transform: translateY(-52%) !important;
+      color: $input-placeholder-color !important;
+      font-size: 14px !important;
+      pointer-events: none !important;
+      transition: $input-transition !important;
+      background-color: $input-background !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      border: none !important;
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      width: auto !important;
+      height: auto !important;
+      line-height: normal !important;
     }
 
     &.has-value {
       .input-placeholder {
-        top: 12px;
-        font-size: 10px;
-        color: $input-placeholder-color-active;
-        transform: translateY(0);
+        top: 12px !important;
+        font-size: 10px !important;
+        color: $input-placeholder-color-active !important;
+        transform: translateY(0) !important;
       }
     }
 
     // Icon styles
     .input-icon {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      width: $input-icon-size;
-      height: $input-icon-size;
-      color: $input-placeholder-color;
-      pointer-events: none;
+      position: absolute !important;
+      top: 50% !important;
+      transform: translateY(-50%) !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: $input-icon-size !important;
+      height: $input-icon-size !important;
+      color: $input-placeholder-color !important;
+      pointer-events: none !important;
 
       svg {
-        width: 100%;
-        height: 100%;
+        width: 100% !important;
+        height: 100% !important;
       }
 
       &.input-icon-start {
-        left: $input-icon-spacing;
+        left: $input-icon-spacing !important;
       }
 
       &.input-icon-end {
-        right: $input-icon-spacing;
-        pointer-events: auto;
-        cursor: pointer;
+        right: $input-icon-spacing !important;
+        pointer-events: auto !important;
+        cursor: pointer !important;
       }
     }
 
     // Adjust padding when icons are present
     &.has-start-icon {
       input {
-        padding-left: calc(#{$input-icon-spacing} + #{$input-icon-size} + 8px);
+        padding-left: calc(#{$input-icon-spacing} + #{$input-icon-size} + 8px) !important;
       }
 
       .input-placeholder {
-        left: calc(#{$input-icon-spacing} + #{$input-icon-size} + 8px);
+        left: calc(#{$input-icon-spacing} + #{$input-icon-size} + 8px) !important;
       }
     }
 
     &.has-end-icon {
       input {
-        padding-right: calc(#{$input-icon-spacing} + #{$input-icon-size} + 8px);
+        padding-right: calc(#{$input-icon-spacing} + #{$input-icon-size} + 8px) !important;
       }
     }
   }
 
   .input-label {
-    font-size: 14px;
-    font-weight: 500;
-    color: white;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    color: white !important;
   }
   .input-required {
-    color: red;
-    font-size: 12px;
-    font-weight: 500;
-    margin-left: 4px;
+    color: red !important;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    margin-left: 4px !important;
   }
 }

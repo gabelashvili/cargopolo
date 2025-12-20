@@ -1,19 +1,17 @@
 // Calculator SCSS Test File
 @use '../styles/fonts.scss' as *;
 
-
-
 * {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
+  padding: 0 !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
 }
 
 $calculator-background-gradient: linear-gradient(135deg, #00a76f 0%, #007867 100%);
 
 .calculator {
-  background: $calculator-background-gradient;
-  width: 100%;
-  height: 100%;
-  font-family: $font-family-primary;
+  background: $calculator-background-gradient !important;
+  width: 100% !important;
+  height: 100% !important;
+  font-family: $font-family-primary !important;
 }
