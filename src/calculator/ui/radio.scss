@@ -1,0 +1,80 @@
+$radio-size: 20px;
+$radio-border-color: #fff;
+$radio-selected-color: #77ed8b;
+$radio-label-color: #fff;
+$radio-label-font-size: 14px;
+$radio-label-font-weight: 400;
+
+.radio-group {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 12px !important;
+
+  .radio-group-label {
+    color: $radio-label-color !important;
+    font-size: $radio-label-font-size !important;
+    font-weight: $radio-label-font-weight !important;
+  }
+
+  .radio-options {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+
+  .radio-option {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    cursor: pointer !important;
+
+    input[type='radio'] {
+      position: absolute !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+      width: 0 !important;
+      height: 0 !important;
+    }
+
+    .radio-button {
+      width: $radio-size !important;
+      height: $radio-size !important;
+      border: 2px solid $radio-border-color !important;
+      border-radius: 50% !important;
+      background-color: transparent !important;
+      display: inline-block !important;
+      position: relative !important;
+      flex-shrink: 0 !important;
+      transition: all 0.2s ease !important;
+
+      &.selected {
+        border-color: $radio-selected-color !important;
+        background-color: transparent !important;
+
+        &::before {
+          content: '' !important;
+          position: absolute !important;
+          top: 50% !important;
+          left: 50% !important;
+          transform: translate(-50%, -50%) !important;
+          width: 10px !important;
+          height: 10px !important;
+          border-radius: 50% !important;
+          background-color: $radio-selected-color !important;
+        }
+      }
+    }
+
+    .radio-label {
+      color: $radio-label-color !important;
+      font-size: $radio-label-font-size !important;
+      font-weight: $radio-label-font-weight !important;
+      user-select: none !important;
+    }
+
+    &:hover .radio-button {
+      opacity: 0.8 !important;
+    }
+  }
+}
+

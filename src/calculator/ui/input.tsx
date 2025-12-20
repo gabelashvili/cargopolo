@@ -30,7 +30,7 @@ const InputWrapper = forwardRef<
 })
 
 const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
-  const { label, placeholder, startIcon, endIcon, required, rootClassName, ...restProps } = props
+  const { placeholder, startIcon, endIcon, required, rootClassName, ...restProps } = props
   const hasValue = props.value !== undefined && props.value !== '' && props.value !== null
   const hasStartIcon = !!startIcon
   const hasEndIcon = !!endIcon
@@ -50,7 +50,6 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
     const { onChange, ...numericProps } = restProps
     return (
       <div className={rootClasses}>
-        {label && <label className="input-label">{label}</label>}
         <div className={wrapperClasses}>
           {startIcon && <span className="input-icon input-icon-start">{startIcon}</span>}
           <NumericFormat
@@ -77,7 +76,6 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   const { onChange, ...inputProps } = restProps
   return (
     <div className={rootClasses}>
-      {label && <label className="input-label">{label}</label>}
       <div className={wrapperClasses}>
         {startIcon && <span className="input-icon input-icon-start">{startIcon}</span>}
         <InputWrapper ref={ref} {...inputProps} onChange={e => onChange?.(e.target.value)} placeholder=" " />
