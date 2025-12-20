@@ -11,4 +11,3 @@ export interface SectionConfig {
 export interface SectionRegistry {
   [key: string]: SectionConfig
 }
-
