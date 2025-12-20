@@ -7,6 +7,7 @@
 @use "../calculator/ui/input.scss";
 @use "../calculator/ui/autocomplete.scss";
 @use "../calculator/ui/radio.scss";
+@use "../calculator/ui/option-selector.scss";
 
 // Base reset for Shadow DOM
 :host {

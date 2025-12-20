@@ -2,6 +2,7 @@ import { useState } from 'react'
 import Input from '../ui/input'
 import Autocomplete, { type AutocompleteOption } from '../ui/autocomplete'
 import Radio from '../ui/radio'
+import OptionSelector from '../ui/option-selector'
 import { DollarIcon, ClearIcon, SearchIcon } from '../ui/icons'
 import './calculator.scss'
 import Header from './header/Header'
@@ -19,6 +20,7 @@ const currencyOptions: AutocompleteOption[] = [
 const Calculator = () => {
   const [selectedCurrency, setSelectedCurrency] = useState<AutocompleteOption | null>(null)
   const [selectedOption, setSelectedOption] = useState<string | number>('option1')
+  const [selectedSelector, setSelectedSelector] = useState<string | number>('option1')
 
   return (
     <div className="calculator">
@@ -64,6 +66,17 @@ const Calculator = () => {
           ]}
           value={selectedOption}
           onChange={setSelectedOption}
+        />
+        <Label>Option Selector</Label>
+        <OptionSelector
+          name="calculator-selector"
+          options={[
+            { value: 'option1', label: 'Option 1' },
+            { value: 'option2', label: 'Option 2' },
+            { value: 'option3', label: 'Option 3' },
+          ]}
+          value={selectedSelector}
+          onChange={setSelectedSelector}
         />
         <div>+</div>
         <div>+</div>
