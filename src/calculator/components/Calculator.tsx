@@ -3,6 +3,7 @@ import Input from '../ui/input'
 import Autocomplete, { type AutocompleteOption } from '../ui/autocomplete'
 import Radio from '../ui/radio'
 import OptionSelector from '../ui/option-selector'
+import PriceSection from './PriceSection'
 import { DollarIcon, ClearIcon, SearchIcon } from '../ui/icons'
 import './calculator.scss'
 import Header from './header/Header'
@@ -78,6 +79,7 @@ const Calculator = () => {
           value={selectedSelector}
           onChange={setSelectedSelector}
         />
+        <PriceSection price="$ 8.800" label="Price:" />
         <div>+</div>
         <div>+</div>
         <div>+</div>
