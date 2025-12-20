@@ -63,6 +63,8 @@ export function injectSection(section: SectionConfig): boolean {
 
   // Wait for CSS to load before rendering React component
   const handleStyleLoad = () => {
+    // Insert after CSS link so it overrides
+
     // Mount React component into shadow DOM after CSS is loaded
     ReactDOM.createRoot(mountPoint).render(<React.StrictMode>{section.component()}</React.StrictMode>)
     injectedSections.add(section.id)
