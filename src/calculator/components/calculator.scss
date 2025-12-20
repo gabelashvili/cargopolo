@@ -5,6 +5,7 @@
   padding: 0 !important;
   margin: 0 !important;
   box-sizing: border-box !important;
+  letter-spacing: 0.5px !important;
 }
 
 $calculator-background-gradient: linear-gradient(
@@ -18,4 +19,9 @@ $calculator-background-gradient: linear-gradient(
   width: 100% !important;
   height: 100% !important;
   font-family: $font-family-primary !important;
+  letter-spacing: 0.5px !important;
+
+  * {
+    letter-spacing: 0.5px !important;
+  }
 }
