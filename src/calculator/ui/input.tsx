@@ -1,4 +1,4 @@
-import type { InputHTMLAttributes } from 'react'
+import type { InputHTMLAttributes, ReactNode } from 'react'
 import { NumericFormat, type NumericFormatProps } from 'react-number-format'
 import './input.scss'
 
@@ -6,6 +6,8 @@ type BaseInputProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange' | '
   value?: string | number
   onChange?: (value: number | string) => void
   label?: string
+  startIcon?: ReactNode
+  endIcon?: ReactNode
 }
 
 type InputProps = BaseInputProps &
@@ -25,15 +27,27 @@ const InputWrapper = (
 }
 
 const Input = (props: InputProps) => {
-  const { label, placeholder, ...restProps } = props
+  const { label, placeholder, startIcon, endIcon, ...restProps } = props
   const hasValue = props.value !== undefined && props.value !== '' && props.value !== null
+  const hasStartIcon = !!startIcon
+  const hasEndIcon = !!endIcon
+
+  const wrapperClasses = [
+    'input-wrapper',
+    hasValue ? 'has-value' : '',
+    hasStartIcon ? 'has-start-icon' : '',
+    hasEndIcon ? 'has-end-icon' : '',
+  ]
+    .filter(Boolean)
+    .join(' ')
 
   if (props.type === 'number') {
     const { onChange, ...numericProps } = restProps
     return (
-      <div>
+      <div className="input-root">
         {label && <label className="input-label">{label}</label>}
-        <div className={`input-wrapper ${hasValue ? 'has-value' : ''}`}>
+        <div className={wrapperClasses}>
+          {startIcon && <span className="input-icon input-icon-start">{startIcon}</span>}
           <NumericFormat
             {...(numericProps as NumericFormatProps)}
             onValueChange={values => {
@@ -43,6 +57,7 @@ const Input = (props: InputProps) => {
             placeholder=" "
           />
           {placeholder && <label className="input-placeholder">{placeholder}</label>}
+          {endIcon && <span className="input-icon input-icon-end">{endIcon}</span>}
         </div>
       </div>
     )
@@ -52,9 +67,11 @@ const Input = (props: InputProps) => {
   return (
     <div className="input-root">
       {label && <label className="input-label">{label}</label>}
-      <div className={`input-wrapper ${hasValue ? 'has-value' : ''}`}>
+      <div className={wrapperClasses}>
+        {startIcon && <span className="input-icon input-icon-start">{startIcon}</span>}
         <InputWrapper {...inputProps} onChange={e => onChange?.(e.target.value)} placeholder=" " />
         {placeholder && <label className="input-placeholder">{placeholder}</label>}
+        {endIcon && <span className="input-icon input-icon-end">{endIcon}</span>}
       </div>
     </div>
   )

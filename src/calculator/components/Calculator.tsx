@@ -1,4 +1,5 @@
 import Input from '../ui/input'
+import { DollarIcon, ClearIcon } from '../ui/icons'
 import './calculator.scss'
 import Header from './header/Header'
 
@@ -11,6 +12,8 @@ const Calculator = () => {
         <div>c</div>
         <div>d</div>
         <Input
+          startIcon={<DollarIcon />}
+          endIcon={<ClearIcon />}
           onChange={e => {
             console.log(e)
           }}

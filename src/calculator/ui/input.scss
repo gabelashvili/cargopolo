@@ -8,10 +8,14 @@ $input-text-color: #323232;
 $input-background: #fff;
 $input-transition: all 0.3s ease;
 
+$input-icon-size: 20px;
+$input-icon-spacing: 12px;
+
 .input-root {
   display: flex;
   flex-direction: column;
   gap: 8px;
+
   .input-wrapper {
     position: relative;
     width: 100%;
@@ -19,7 +23,7 @@ $input-transition: all 0.3s ease;
     input {
       width: 100%;
       padding-left: 16px;
-      padding-top: 16px;
+      padding-right: 16px;
       padding-top: 24px;
       padding-bottom: 12px;
       border: 1px solid $input-border-color;
@@ -38,7 +42,7 @@ $input-transition: all 0.3s ease;
       &:focus + .input-placeholder,
       &:not(:placeholder-shown) + .input-placeholder,
       &[value]:not([value=""]) + .input-placeholder {
-        top: 8px;
+        top: 12px;
         font-size: 0.75rem;
         color: $input-placeholder-color-active;
         transform: translateY(0);
@@ -57,8 +61,8 @@ $input-transition: all 0.3s ease;
     .input-placeholder {
       position: absolute;
       left: 16px;
-      top: 50%;
-      transform: translateY(-50%);
+      top: 52.5%;
+      transform: translateY(-52%);
       color: $input-placeholder-color;
       font-size: 14px;
       pointer-events: none;
@@ -69,13 +73,60 @@ $input-transition: all 0.3s ease;
 
     &.has-value {
       .input-placeholder {
-        top: 8px;
+        top: 12px;
         font-size: 10px;
         color: $input-placeholder-color-active;
         transform: translateY(0);
       }
     }
+
+    // Icon styles
+    .input-icon {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: $input-icon-size;
+      height: $input-icon-size;
+      color: $input-placeholder-color;
+      pointer-events: none;
+
+      svg {
+        width: 100%;
+        height: 100%;
+      }
+
+      &.input-icon-start {
+        left: $input-icon-spacing;
+      }
+
+      &.input-icon-end {
+        right: $input-icon-spacing;
+        pointer-events: auto;
+        cursor: pointer;
+      }
+    }
+
+    // Adjust padding when icons are present
+    &.has-start-icon {
+      input {
+        padding-left: calc(#{$input-icon-spacing} + #{$input-icon-size} + 8px);
+      }
+
+      .input-placeholder {
+        left: calc(#{$input-icon-spacing} + #{$input-icon-size} + 8px);
+      }
+    }
+
+    &.has-end-icon {
+      input {
+        padding-right: calc(#{$input-icon-spacing} + #{$input-icon-size} + 8px);
+      }
+    }
   }
+
   .input-label {
     font-size: 14px;
     font-weight: 500;
