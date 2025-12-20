@@ -1,0 +1,32 @@
+// Import all styles for Shadow DOM
+@use '../calculator/styles/fonts.scss';
+@use '../calculator/styles/mixins.scss';
+@use '../calculator/components/calculator.scss';
+@use '../calculator/components/header/header.scss';
+@use '../calculator/ui/input.scss';
+@use '../calculator/ui/autocomplete.scss';
+
+// Base reset for Shadow DOM
+:host {
+  all: initial;
+  display: block;
+  font-family: 'Helvetica Neue', -apple-system, BlinkMacSystemFont, sans-serif;
+  box-sizing: border-box;
+  line-height: 1.5;
+  font-size: 14px;
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+img, svg {
+  max-width: 100%;
+  height: auto;
+}
+
+button, input, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+}
+
