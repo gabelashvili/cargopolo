@@ -48,12 +48,6 @@ export function injectSection(section: SectionConfig): boolean {
   // Create shadow root for style isolation
   const shadowRoot = container.attachShadow({ mode: 'open' })
 
-  // Inject styles into shadow DOM
-  const styleLink = document.createElement('link')
-  styleLink.rel = 'stylesheet'
-  styleLink.href = cssUrl
-  shadowRoot.appendChild(styleLink)
-
   // Create mount point inside shadow DOM
   const mountPoint = document.createElement('div')
   mountPoint.className = 'cargopolo-shadow-root'
@@ -62,11 +56,32 @@ export function injectSection(section: SectionConfig): boolean {
   // Insert at correct position
   insertElement(container, targetElement, section.insertPosition)
 
-  // Mount React component into shadow DOM
-  ReactDOM.createRoot(mountPoint).render(<React.StrictMode>{section.component()}</React.StrictMode>)
+  // Inject styles into shadow DOM and wait for CSS to load
+  const styleLink = document.createElement('link')
+  styleLink.rel = 'stylesheet'
+  styleLink.href = cssUrl
 
-  injectedSections.add(section.id)
-  console.log(`[Cargopolo] Section "${section.name}" injected with Shadow DOM!`)
+  // Wait for CSS to load before rendering React component
+  const handleStyleLoad = () => {
+    // Mount React component into shadow DOM after CSS is loaded
+    ReactDOM.createRoot(mountPoint).render(<React.StrictMode>{section.component()}</React.StrictMode>)
+    injectedSections.add(section.id)
+    console.log(`[Cargopolo] Section "${section.name}" injected with Shadow DOM!`)
+  }
+
+  // Check if stylesheet is already loaded
+  if (styleLink.sheet) {
+    handleStyleLoad()
+  } else {
+    styleLink.addEventListener('load', handleStyleLoad)
+    styleLink.addEventListener('error', () => {
+      console.warn(`[Cargopolo] Failed to load CSS for "${section.name}", rendering anyway...`)
+      handleStyleLoad()
+    })
+  }
+
+  shadowRoot.appendChild(styleLink)
+
   return true
 }
 
