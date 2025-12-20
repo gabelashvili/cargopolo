@@ -43,7 +43,7 @@ $input-icon-spacing: 12px;
       &:not(:placeholder-shown) + .input-placeholder,
       &[value]:not([value=""]) + .input-placeholder {
         top: 12px;
-        font-size: 0.75rem;
+        font-size: 11px;
         color: $input-placeholder-color-active;
         transform: translateY(0);
       }
