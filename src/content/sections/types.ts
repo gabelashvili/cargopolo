@@ -1,10 +1,14 @@
 import type { ReactNode } from 'react'
 
+export interface TargetConfig {
+  selector: string
+  insertPosition: 'before' | 'after' | 'prepend' | 'append'
+}
+
 export interface SectionConfig {
   id: string
   name: string
-  targetSelector: string
-  insertPosition: 'before' | 'after' | 'prepend' | 'append'
+  targets: TargetConfig | TargetConfig[]
   component: () => ReactNode
 }
 

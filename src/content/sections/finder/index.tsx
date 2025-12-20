@@ -12,7 +12,9 @@ const FinderPlaceholder = () => (
 export const finderSection: SectionConfig = {
   id: 'cargopolo-finder',
   name: 'Finder',
-  targetSelector: '.some-target-selector', // Update with actual selector
-  insertPosition: 'before',
+  targets: {
+    selector: '.some-target-selector', // Update with actual selector
+    insertPosition: 'before',
+  },
   component: () => <FinderPlaceholder />,
 }

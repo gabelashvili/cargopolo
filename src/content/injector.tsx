@@ -1,13 +1,13 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import type { SectionConfig } from './sections/types'
+import type { SectionConfig, TargetConfig } from './sections/types'
 
 const injectedSections = new Set<string>()
 
 // Get the CSS URL from the extension
 const cssUrl = chrome.runtime.getURL('assets/content.css')
 
-function insertElement(container: HTMLElement, target: Element, position: SectionConfig['insertPosition']) {
+function insertElement(container: HTMLElement, target: Element, position: TargetConfig['insertPosition']) {
   switch (position) {
     case 'before':
       target.parentNode?.insertBefore(container, target)
@@ -24,19 +24,21 @@ function insertElement(container: HTMLElement, target: Element, position: Sectio
   }
 }
 
-export function injectSection(section: SectionConfig): boolean {
-  const rootId = `${section.id}-root`
+function injectSectionAtTarget(
+  section: SectionConfig,
+  target: { selector: string; insertPosition: 'before' | 'after' | 'prepend' | 'append' },
+  instanceIndex: number
+): boolean {
+  const rootId = `${section.id}-root${instanceIndex > 0 ? `-${instanceIndex}` : ''}`
 
-  // Check if already injected
-  if (injectedSections.has(section.id) || document.getElementById(rootId)) {
-    console.log(`[Cargopolo] Section "${section.name}" already injected`)
+  // Check if already injected at this target
+  if (document.getElementById(rootId)) {
     return true
   }
 
   // Find target element
-  const targetElement = document.querySelector(section.targetSelector)
+  const targetElement = document.querySelector(target.selector)
   if (!targetElement) {
-    console.log(`[Cargopolo] Target for "${section.name}" not found: ${section.targetSelector}`)
     return false
   }
 
@@ -44,6 +46,7 @@ export function injectSection(section: SectionConfig): boolean {
   const container = document.createElement('div')
   container.id = rootId
   container.setAttribute('data-section', section.id)
+  container.setAttribute('data-instance', instanceIndex.toString())
 
   // Create shadow root for style isolation
   const shadowRoot = container.attachShadow({ mode: 'open' })
@@ -54,7 +57,7 @@ export function injectSection(section: SectionConfig): boolean {
   shadowRoot.appendChild(mountPoint)
 
   // Insert at correct position
-  insertElement(container, targetElement, section.insertPosition)
+  insertElement(container, targetElement, target.insertPosition)
 
   // Inject styles into shadow DOM and wait for CSS to load
   const styleLink = document.createElement('link')
@@ -63,12 +66,9 @@ export function injectSection(section: SectionConfig): boolean {
 
   // Wait for CSS to load before rendering React component
   const handleStyleLoad = () => {
-    // Insert after CSS link so it overrides
-
     // Mount React component into shadow DOM after CSS is loaded
     ReactDOM.createRoot(mountPoint).render(<React.StrictMode>{section.component()}</React.StrictMode>)
-    injectedSections.add(section.id)
-    console.log(`[Cargopolo] Section "${section.name}" injected with Shadow DOM!`)
+    console.log(`[Cargopolo] Section "${section.name}" injected at "${target.selector}" with Shadow DOM!`)
   }
 
   // Check if stylesheet is already loaded
@@ -85,6 +85,35 @@ export function injectSection(section: SectionConfig): boolean {
   shadowRoot.appendChild(styleLink)
 
   return true
+}
+
+export function injectSection(section: SectionConfig): boolean {
+  // Check if already injected
+  if (injectedSections.has(section.id)) {
+    console.log(`[Cargopolo] Section "${section.name}" already processed`)
+    return true
+  }
+
+  const targets = Array.isArray(section.targets) ? section.targets : [section.targets]
+  let allInjected = true
+  let injectedCount = 0
+
+  targets.forEach((target, index) => {
+    if (injectSectionAtTarget(section, target, index)) {
+      injectedCount++
+    } else {
+      allInjected = false
+    }
+  })
+
+  if (injectedCount > 0) {
+    injectedSections.add(section.id)
+    console.log(`[Cargopolo] Section "${section.name}" injected at ${injectedCount}/${targets.length} target(s)`)
+  } else {
+    console.log(`[Cargopolo] No targets found for "${section.name}"`)
+  }
+
+  return allInjected
 }
 
 export function injectSections(sections: SectionConfig[]): void {
