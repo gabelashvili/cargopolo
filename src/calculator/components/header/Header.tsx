@@ -4,7 +4,7 @@ import logo from '../../../assets/logo.svg'
 const Header = () => {
   return (
     <div className="calculator-header">
-        <img src={logo} alt="logo" />
+      <img src={logo} alt="logo" />
     </div>
   )
 }

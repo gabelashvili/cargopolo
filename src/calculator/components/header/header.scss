@@ -1,10 +1,9 @@
+@use "../../../styles/mixins.scss" as *;
 
-@use '../../../styles/mixins.scss' as *;
-
-$calculator-header-border-color: #41AD49;
+$calculator-header-border-color: #41ad49;
 
 .calculator {
-  &-header{
+  &-header {
     border-bottom: 2px solid $calculator-header-border-color;
     height: fit-content;
     padding: 20px;
