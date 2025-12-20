@@ -8,6 +8,7 @@ type BaseInputProps = Omit<InputHTMLAttributes<HTMLInputElement>, 'onChange' | '
   label?: string
   startIcon?: ReactNode
   endIcon?: ReactNode
+  required?: boolean
 }
 
 type InputProps = BaseInputProps &
@@ -27,7 +28,7 @@ const InputWrapper = (
 }
 
 const Input = (props: InputProps) => {
-  const { label, placeholder, startIcon, endIcon, ...restProps } = props
+  const { label, placeholder, startIcon, endIcon, required, ...restProps } = props
   const hasValue = props.value !== undefined && props.value !== '' && props.value !== null
   const hasStartIcon = !!startIcon
   const hasEndIcon = !!endIcon
@@ -56,7 +57,12 @@ const Input = (props: InputProps) => {
             customInput={InputWrapper}
             placeholder=" "
           />
-          {placeholder && <label className="input-placeholder">{placeholder}</label>}
+          {placeholder && (
+            <label className="input-placeholder">
+              {placeholder}
+              {required && <span className="input-required">*</span>}
+            </label>
+          )}
           {endIcon && <span className="input-icon input-icon-end">{endIcon}</span>}
         </div>
       </div>
@@ -70,7 +76,12 @@ const Input = (props: InputProps) => {
       <div className={wrapperClasses}>
         {startIcon && <span className="input-icon input-icon-start">{startIcon}</span>}
         <InputWrapper {...inputProps} onChange={e => onChange?.(e.target.value)} placeholder=" " />
-        {placeholder && <label className="input-placeholder">{placeholder}</label>}
+        {placeholder && (
+          <label className="input-placeholder">
+            {placeholder}
+            {required && <span className="input-required">*</span>}
+          </label>
+        )}
         {endIcon && <span className="input-icon input-icon-end">{endIcon}</span>}
       </div>
     </div>

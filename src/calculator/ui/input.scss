@@ -58,6 +58,8 @@ $input-icon-spacing: 12px;
       }
     }
 
+ 
+
     .input-placeholder {
       position: absolute;
       left: 16px;
@@ -131,5 +133,11 @@ $input-icon-spacing: 12px;
     font-size: 14px;
     font-weight: 500;
     color: white;
+  }
+  .input-required {
+    color: red;
+    font-size: 12px;
+    font-weight: 500;
+    margin-left: 4px;
   }
 }

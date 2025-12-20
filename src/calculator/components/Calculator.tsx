@@ -20,6 +20,7 @@ const Calculator = () => {
           type="text"
           label="Amount"
           placeholder="Enter amount"
+          required
         />
         <div>+</div>
         <div>+</div>
