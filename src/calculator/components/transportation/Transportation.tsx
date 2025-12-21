@@ -83,8 +83,6 @@ const Transportation = ({
     [exitPort],
   );
 
-  console.log(titles.data, 22);
-
   useEffect(() => {
     if (exitPortsOptions.length === 1) {
       setValue("transportation.exitPortId", Number(exitPortsOptions[0].value));
@@ -188,7 +186,7 @@ const Transportation = ({
           options={titles.data?.map((title) => ({ value: title.id.toString(), label: title.name })) || []}
           value={values.titleDocumentId?.toString() || ""}
           onChange={(val) => setValue("transportation.titleDocumentId", Number(val))}
-          loading={!titles.data}
+          loading={!titles.data || titles.isFetching}
           renderOption={({ option }) => {
             const title = titles.data?.find((t) => t.id.toString() === option.value);
             if (!title) return <span>{option.label}</span>;
