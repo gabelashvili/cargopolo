@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import type { Auction, LotDetails } from "../../types/common";
 import "./calculator.scss";
 import Header from "./header/Header";
@@ -59,7 +59,7 @@ const Calculator = ({ auction }: { auction: Auction }) => {
 
   const transportationValues = watch("transportation");
 
-  const totalPrice = useMemo(() => {
+  const totalPrice = () => {
     const auctionPrice = auctionFee.data?.totalCost || 0;
     const groundFeePrice = groundFee.data?.price || 0;
     let insurancePrice = 0;
@@ -74,7 +74,7 @@ const Calculator = ({ auction }: { auction: Auction }) => {
 
     const sum = auctionPrice + groundFeePrice + insurancePrice + titlePrice;
     return sum;
-  }, [auctionFee.data?.totalCost, groundFee.data?.price, titles.data, user.data, transportationValues]);
+  };
 
   // Listen for lot details from content script
   useEffect(() => {
@@ -118,7 +118,7 @@ const Calculator = ({ auction }: { auction: Auction }) => {
           setTitleQuery={setTitleQuery}
           locations={locations}
         />
-        {totalPrice}
+        {totalPrice()}
       </div>
     </div>
   );
