@@ -57,7 +57,6 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
             type={"text"}
             getInputRef={ref as Ref<HTMLInputElement>}
             onValueChange={(values) => {
-              console.log(values);
               onChange?.(values.value);
             }}
             customInput={InputWrapper}

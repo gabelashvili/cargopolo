@@ -5,10 +5,10 @@ export const titlesKeys = {
   all: ["titles"] as const,
 };
 
-export const useTitles = (options?: Omit<UseQueryOptions<Title[], Error>, "queryKey" | "queryFn">) => {
+export const useTitles = (query: string, options?: Omit<UseQueryOptions<Title[], Error>, "queryKey" | "queryFn">) => {
   return useQuery<Title[], Error>({
-    queryKey: titlesKeys.all,
-    queryFn: () => getTitlesApi(),
+    queryKey: [titlesKeys.all, query],
+    queryFn: () => getTitlesApi(query),
     ...options,
   });
 };

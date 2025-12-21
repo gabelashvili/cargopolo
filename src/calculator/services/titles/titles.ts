@@ -16,9 +16,9 @@ interface TitlesApiResponse {
   };
 }
 
-export const getTitlesApi = async (): Promise<Title[]> => {
+export const getTitlesApi = async (query: string): Promise<Title[]> => {
   try {
-    const response = await fetch("https://admin.cargopolo.com/api/calculator/titles", {
+    const response = await fetch(`https://admin.cargopolo.com/api/calculator/titles?search=${query}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

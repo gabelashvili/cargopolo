@@ -19,7 +19,7 @@ import OptionSelector from "../../ui/option-selector/option-selector";
 import { useLocations } from "../../services/locations/locations-queries";
 import type { Auction } from "../../../types/common";
 import { useLocationRoutes } from "../../services/location-routes/location-routes-queries";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useDestinationPorts } from "../../services/destination-ports/destination-ports-queries";
 import { useTitles } from "../../services/titles/titles-queries";
 import PriceSection from "../PriceSection";
@@ -72,15 +72,18 @@ const Transportation = ({
   groundFee: UseQueryResult<GroundFeeResponse, Error>;
   user: UseQueryResult<UserData | null, Error>;
 }) => {
+  const [titleQuery, setTitleQuery] = useState<string>("");
   const locations = useLocations(auction);
   const locationRoutes = useLocationRoutes(values.shippingLocationId);
   const destinationPorts = useDestinationPorts(!user.data);
-  const titles = useTitles();
+  const titles = useTitles(titleQuery);
   const exitPort = locationRoutes.data?.[0].exitPort;
   const exitPortsOptions = useMemo(
     () => (exitPort ? [{ value: exitPort.id.toString(), label: exitPort.name }] : []),
     [exitPort],
   );
+
+  console.log(titles.data, 22);
 
   useEffect(() => {
     if (exitPortsOptions.length === 1) {
@@ -181,6 +184,7 @@ const Transportation = ({
       <div className="calculator-transportation-title-document">
         <Label>Title document</Label>
         <Autocomplete
+          onInputValueChange={(val) => setTitleQuery(val)}
           options={titles.data?.map((title) => ({ value: title.id.toString(), label: title.name })) || []}
           value={values.titleDocumentId?.toString() || ""}
           onChange={(val) => setValue("transportation.titleDocumentId", Number(val))}

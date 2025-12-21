@@ -22,6 +22,7 @@ export interface AutocompleteProps {
   placeholder?: string;
   loading?: boolean;
   renderOption?: (props: RenderOptionProps) => React.ReactNode;
+  onInputValueChange?: (value: string) => void;
 }
 
 const ClearIcon = ({ size = 20, color = "currentColor" }: { size?: number; color?: string }) => (
@@ -47,6 +48,7 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
   placeholder = "Type to search...",
   loading = false,
   renderOption,
+  onInputValueChange,
 }) => {
   const [isOpen, setIsOpen] = React.useState(false);
   const [inputValue, setInputValue] = React.useState("");
@@ -61,12 +63,12 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
 
   // Filter options based on input value
   const filteredOptions = React.useMemo(() => {
-    if (!inputValue.trim()) {
+    if (!inputValue.trim() || onInputValueChange) {
       return options;
     }
     const lowerInput = inputValue.toLowerCase();
     return options.filter((option) => option.label.toLowerCase().includes(lowerInput));
-  }, [options, inputValue]);
+  }, [inputValue, onInputValueChange, options]);
 
   // Update input value when selected value changes from outside (only when closed)
   React.useEffect(() => {
@@ -277,6 +279,16 @@ const Autocomplete: React.FC<AutocompleteProps> = ({
       )}
     </div>
   );
+
+  const inputValueRef = React.useRef("");
+
+  React.useEffect(() => {
+    inputValueRef.current = inputValue;
+    if (!onInputValueChange) return;
+    setTimeout(() => {
+      onInputValueChange(inputValueRef.current);
+    }, 300);
+  }, [inputValue, onInputValueChange]);
 
   return (
     <div ref={containerRef} className="autocomplete-container">
