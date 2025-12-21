@@ -1,5 +1,5 @@
 // Finder section - placeholder for future implementation
-import type { SectionConfig } from "../types";
+import type { SectionConfigItem } from "../types";
 
 // Placeholder component - replace with actual Finder component
 const FinderPlaceholder = () => (
@@ -16,10 +16,10 @@ const FinderPlaceholder = () => (
   </div>
 );
 
-export const finderSection: SectionConfig = {
+export const finderSection: SectionConfigItem = {
   id: "cargopolo-finder",
   name: "Finder",
-  targets: {
+  target: {
     selector: ".some-target-selector", // Update with actual selector
     insertPosition: "before",
   },

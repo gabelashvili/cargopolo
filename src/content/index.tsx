@@ -1,9 +1,13 @@
 console.log("[CS] Content script file loaded");
 
+import { injector } from "../calculator/injector";
 import "./content.scss";
 
-function handleRouteChange(url: string) {
+let abortController: AbortController | undefined = undefined;
+
+async function handleRouteChange(url: string) {
   console.log("[CS] Route changed:", url);
+  abortController = await injector(url, abortController);
 }
 
 function init() {

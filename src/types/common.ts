@@ -5,3 +5,5 @@ export interface LotDetails {
   releaseYear: number;
   engineInformation: string;
 }
+
+export type Auction = "iaai" | "copart";
