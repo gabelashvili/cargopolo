@@ -6,6 +6,14 @@ export const schema = z.object({
     feeType: z.enum(["low", "high"]),
     auction: z.enum(["iaai", "copart"]),
   }),
+  transportation: z.object({
+    vehicleType: z.string(),
+    containerType: z.enum(["4 Vehicles", "3 Vehicles"]),
+    shippingLocationId: z.number(),
+    exitPortId: z.number(),
+    deliveryPortId: z.number(),
+    insuranceType: z.enum(["basic", "auction", "warehouse"]),
+  }),
 });
 
 export type FormData = z.infer<typeof schema>;

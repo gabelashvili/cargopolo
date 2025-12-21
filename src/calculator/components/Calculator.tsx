@@ -20,6 +20,14 @@ const Calculator = ({ auction }: { auction: Auction }) => {
         feeType: "low",
         auction,
       },
+      transportation: {
+        containerType: "4 Vehicles",
+        shippingLocationId: NaN,
+        exitPortId: NaN,
+        deliveryPortId: NaN,
+        insuranceType: "warehouse",
+        vehicleType: "",
+      },
     },
   });
 
@@ -44,7 +52,7 @@ const Calculator = ({ auction }: { auction: Auction }) => {
       <Header />
       <div className="calculator-content">
         <Auctions auction={auction} values={watch("auction")} setValue={setValue} />
-        <Transportation />
+        <Transportation values={watch("transportation")} setValue={setValue} />
       </div>
     </div>
   );
