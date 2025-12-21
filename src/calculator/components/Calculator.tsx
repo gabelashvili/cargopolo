@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import type { Auction, LotDetails } from "../../types/common";
 import "./calculator.scss";
 import Header from "./header/Header";
@@ -12,10 +12,13 @@ import Transportation from "./transportation/Transportation";
 import { useGroundFee } from "../services/ground-fee/ground-fee-queries";
 import { useUser } from "../services/user/user-queries";
 import { useAuctionCalculation } from "../services/auction/auction-queries";
+import { useTitles } from "../services/titles/titles-queries";
 
 const Calculator = ({ auction }: { auction: Auction }) => {
   const [lotDetails, setLotDetails] = useState<LotDetails | null>(null);
   const user = useUser("p9fYUDsqcgr6OcVXBZUY23prmhOcul1R3sW2gHYroOKlKb7qnGn8OAYA3Jnu");
+  const [titleQuery, setTitleQuery] = useState<string>("");
+  const titles = useTitles(titleQuery);
 
   const { watch, setValue } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -50,6 +53,30 @@ const Calculator = ({ auction }: { auction: Auction }) => {
     auction: watch("auction.auction"),
   });
 
+  const totalPrice = useMemo(() => {
+    const auctionPrice = auctionFee.data?.totalCost || 0;
+    const groundFeePrice = groundFee.data?.price || 0;
+    let insurancePrice = 0;
+    if (watch("transportation.insuranceType") !== "basic" && user.data) {
+      const percent =
+        watch("transportation.insuranceType") === "auction"
+          ? user.data.insuranceByAuctionFee
+          : user.data?.insuranceByWarehouseFee;
+      insurancePrice = (auctionPrice * percent) / 100;
+    }
+    const titlePrice = titles.data?.find((title) => title.id === watch("transportation.titleDocumentId"))?.price || 0;
+
+    const sum = auctionPrice + groundFeePrice + insurancePrice + titlePrice;
+    return sum;
+  }, [
+    auctionFee.data?.totalCost,
+    groundFee.data?.price,
+    titles.data,
+    user.data,
+    watch("transportation.insuranceType"),
+    watch("transportation.titleDocumentId"),
+  ]);
+
   // Listen for lot details from content script
   useEffect(() => {
     if (auction === "iaai") {
@@ -78,6 +105,8 @@ const Calculator = ({ auction }: { auction: Auction }) => {
           auction={auction}
           groundFee={groundFee}
           auctionFee={auctionFee}
+          titles={titles}
+          setTitleQuery={setTitleQuery}
         />
       </div>
     </div>

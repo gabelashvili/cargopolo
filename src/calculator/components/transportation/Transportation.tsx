@@ -19,15 +19,15 @@ import OptionSelector from "../../ui/option-selector/option-selector";
 import { useLocations } from "../../services/locations/locations-queries";
 import type { Auction } from "../../../types/common";
 import { useLocationRoutes } from "../../services/location-routes/location-routes-queries";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { useDestinationPorts } from "../../services/destination-ports/destination-ports-queries";
-import { useTitles } from "../../services/titles/titles-queries";
 import PriceSection from "../PriceSection";
 import type { UseQueryResult } from "@tanstack/react-query";
 import type { GroundFeeResponse } from "../../services/ground-fee/ground-fee";
 import type { UserData } from "../../services/user/user";
 import Radio from "../../ui/radio/radio";
 import type { AuctionCalculationRes } from "../../services/auction/auction";
+import type { Title } from "../../services/titles/titles";
 
 export const VehicleTypes = {
   sedan: "Sedan",
@@ -68,6 +68,8 @@ const Transportation = ({
   auction,
   groundFee,
   auctionFee,
+  titles,
+  setTitleQuery,
 }: {
   values: FormData["transportation"];
   setValue: UseFormSetValue<FormData>;
@@ -75,39 +77,18 @@ const Transportation = ({
   groundFee: UseQueryResult<GroundFeeResponse, Error>;
   user: UseQueryResult<UserData | null, Error>;
   auctionFee: UseQueryResult<AuctionCalculationRes, Error>;
+  titles: UseQueryResult<Title[], Error>;
+  setTitleQuery: (query: string) => void;
 }) => {
-  const [titleQuery, setTitleQuery] = useState<string>("");
   const locations = useLocations(auction);
   const locationRoutes = useLocationRoutes(values.shippingLocationId);
   const destinationPorts = useDestinationPorts(!user.data);
-  const titles = useTitles(titleQuery);
   const exitPort = locationRoutes.data?.[0].exitPort;
   const exitPortsOptions = useMemo(
     () => (exitPort ? [{ value: exitPort.id.toString(), label: exitPort.name }] : []),
     [exitPort],
   );
 
-  const totalPrice = useMemo(() => {
-    const auctionPrice = auctionFee.data?.totalCost || 0;
-    const groundFeePrice = groundFee.data?.price || 0;
-    let insurancePrice = 0;
-    if (values.insuranceType !== "basic" && user.data) {
-      const percent =
-        values.insuranceType === "auction" ? user.data.insuranceByAuctionFee : user.data?.insuranceByWarehouseFee;
-      insurancePrice = (auctionPrice * percent) / 100;
-    }
-    const titlePrice = titles.data?.find((title) => title.id === values.titleDocumentId)?.price || 0;
-
-    const sum = auctionPrice + groundFeePrice + insurancePrice + titlePrice;
-    return sum;
-  }, [
-    auctionFee.data?.totalCost,
-    groundFee.data?.price,
-    titles.data,
-    user.data,
-    values.insuranceType,
-    values.titleDocumentId,
-  ]);
 
   useEffect(() => {
     if (exitPortsOptions.length === 1) {
@@ -121,7 +102,6 @@ const Transportation = ({
     }
   }, [setValue, user.data]);
 
-  console.log(groundFee.data);
   return (
     <div className="calculator-transportation">
       <div className="calculator-transportation-vehicle-type">
