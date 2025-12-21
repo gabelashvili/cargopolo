@@ -12,19 +12,6 @@
       flex-direction: row !important;
       gap: 8px !important;
       align-items: center !important;
-      padding: 16px 12px !important;
-      cursor: pointer !important;
-      margin: 8px !important;
-      border-radius: 8px !important;
-      .selected {
-        background-color: rgba(65, 173, 73, 0.1) !important;
-      }
-      .highlighted {
-        background-color: rgba(65, 173, 73, 0.1) !important;
-      }
-      &:hover {
-        background-color: rgba(65, 173, 73, 0.1) !important;
-      }
     }
   }
 }

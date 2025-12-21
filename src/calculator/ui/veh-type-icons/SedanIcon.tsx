@@ -1,13 +1,8 @@
-import type { SVGProps } from 'react'
+import type { SVGProps } from "react";
 
 const SedanIcon = (props: SVGProps<SVGSVGElement>) => {
   return (
-    <svg
-      viewBox="0 0 546 172"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      {...props}
-    >
+    <svg viewBox="0 0 546 172" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
       <path
         d="M455.9 166.97C477.842 166.97 495.63 149.182 495.63 127.24C495.63 105.298 477.842 87.51 455.9 87.51C433.958 87.51 416.17 105.298 416.17 127.24C416.17 149.182 433.958 166.97 455.9 166.97Z"
         stroke="currentColor"
@@ -219,7 +214,7 @@ const SedanIcon = (props: SVGProps<SVGSVGElement>) => {
         stroke-linejoin="round"
       ></path>
     </svg>
-  )
-}
+  );
+};
 
-export default SedanIcon
+export default SedanIcon;

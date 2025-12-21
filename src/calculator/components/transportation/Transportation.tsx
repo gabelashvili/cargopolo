@@ -66,8 +66,8 @@ const Transportation = () => {
                   props.isHighlighted && "highlighted",
                 )}
               >
-                <div style={{ width: 48, color: "#8E8E8E" }}>
-                  <Icon />
+                <div style={{ width: 48, height: 16, color: "#8E8E8E" }}>
+                  <Icon style={{ width: 48, height: 20 }} />
                 </div>
                 <span>{props.option.label}</span>
               </div>

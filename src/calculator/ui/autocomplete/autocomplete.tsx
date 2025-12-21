@@ -245,7 +245,7 @@ const Autocomplete = ({
         endIcon={endIcon}
       />
 
-      {isOpen && (
+      {true && (
         <ul ref={listRef} className="autocomplete-dropdown">
           {loading ? (
             <li className="autocomplete-option autocomplete-loading">Loading...</li>
@@ -272,15 +272,7 @@ const Autocomplete = ({
                   }}
                   onMouseEnter={() => setHighlightedIndex(index)}
                 >
-                  {renderOption ? (
-                    renderOption({ option, isHighlighted, isSelected })
-                  ) : (
-                    <li
-                      className={`autocomplete-option ${isHighlighted ? "highlighted" : ""} ${isSelected ? "selected" : ""}`}
-                    >
-                      {option.label}
-                    </li>
-                  )}
+                  {renderOption ? renderOption({ option, isHighlighted, isSelected }) : option.label}
                 </div>
               );
             })
