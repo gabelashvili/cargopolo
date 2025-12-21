@@ -13,6 +13,7 @@ export const schema = z.object({
     exitPortId: z.number(),
     deliveryPortId: z.number(),
     insuranceType: z.enum(["basic", "auction", "warehouse"]),
+    titleDocumentId: z.number(),
   }),
 });
 

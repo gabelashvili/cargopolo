@@ -81,4 +81,62 @@
       color: #41ad49 !important;
     }
   }
+
+  &-title-table {
+    width: 100% !important;
+    border-collapse: collapse !important;
+    table-layout: fixed !important;
+
+    tbody {
+      tr {
+        td {
+          padding: 4px 8px !important;
+          vertical-align: middle !important;
+        }
+      }
+    }
+  }
+
+  &-title-name {
+    font-size: 14px !important;
+    color: #323232 !important;
+    font-weight: 400 !important;
+    width: 60% !important;
+    word-wrap: break-word !important;
+  }
+
+  &-title-badge {
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    padding: 2px 8px !important;
+    border-radius: 12px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    width: max-content !important;
+
+    &.ok {
+      background-color: rgba(65, 173, 73, 0.1) !important;
+      color: #41ad49 !important;
+    }
+
+    &.not-ok {
+      background-color: rgba(231, 76, 60, 0.1) !important;
+      color: #e74c3c !important;
+    }
+  }
+
+  &-title-status {
+    text-align: center !important;
+    width: 25% !important;
+    padding: 4px 8px !important;
+  }
+
+  &-title-price {
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    color: #323232 !important;
+    text-align: right !important;
+    width: 15% !important;
+    white-space: nowrap !important;
+  }
 }

@@ -168,6 +168,33 @@ const Transportation = ({
       </div>
       <div className="calculator-transportation-title-document">
         <Label>Title document</Label>
+        <Autocomplete
+          options={titles.data?.map((title) => ({ value: title.id.toString(), label: title.name })) || []}
+          value={values.titleDocumentId?.toString() || ""}
+          onChange={(val) => setValue("transportation.titleDocumentId", Number(val))}
+          loading={!titles.data}
+          renderOption={({ option }) => {
+            const title = titles.data?.find((t) => t.id.toString() === option.value);
+            if (!title) return <span>{option.label}</span>;
+
+            const isOkStatus = title.status === "Ok to buy" || title.status === "OK";
+            return (
+              <table className="calculator-transportation-title-table">
+                <tbody>
+                  <tr>
+                    <td className="calculator-transportation-title-name">{title.name}</td>
+                    <td className="calculator-transportation-title-status">
+                      <span className={`calculator-transportation-title-badge ${isOkStatus ? "ok" : "not-ok"}`}>
+                        {title.status}
+                      </span>
+                    </td>
+                    <td className="calculator-transportation-title-price">${title.price}</td>
+                  </tr>
+                </tbody>
+              </table>
+            );
+          }}
+        />
       </div>
     </div>
   );
