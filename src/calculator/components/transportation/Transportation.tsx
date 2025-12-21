@@ -21,6 +21,7 @@ import type { Auction } from "../../../types/common";
 import { useLocationRoutes } from "../../services/location-routes/location-routes-queries";
 import { useEffect, useMemo } from "react";
 import { useDestinationPorts } from "../../services/destination-ports/destination-ports-queries";
+import { useTitles } from "../../services/titles/titles-queries";
 
 export const VehicleTypes = {
   sedan: "Sedan",
@@ -66,13 +67,14 @@ const Transportation = ({
   const locations = useLocations(auction);
   const locationRoutes = useLocationRoutes(values.shippingLocationId);
   const destinationPorts = useDestinationPorts();
+  const titles = useTitles();
   const exitPort = locationRoutes.data?.[0].exitPort;
   const exitPortsOptions = useMemo(
     () => (exitPort ? [{ value: exitPort.id.toString(), label: exitPort.name }] : []),
     [exitPort],
   );
 
-  console.log(destinationPorts.data);
+  console.log(titles.data);
 
   useEffect(() => {
     if (exitPortsOptions.length === 1) {
@@ -121,13 +123,32 @@ const Transportation = ({
         <Label>Shipping Info</Label>
         <div className="calculator-transportation-shipping-info-item">
           <Autocomplete
-            options={locations.data?.map((location) => ({ value: location.id.toString(), label: location.name })) || []}
+            options={
+              locations.data?.map((location) => ({
+                value: location.id.toString(),
+                label: `${location.name} (${location.locationStatus})`,
+              })) || []
+            }
             value={values.shippingLocationId.toString()}
             onChange={(val) => {
               setValue("transportation.shippingLocationId", Number(val));
               setValue("transportation.exitPortId", NaN);
             }}
             loading={!locations.data}
+            renderOption={({ option }) => {
+              const [name, status] = option.label.split(" (");
+              const isSublot = status.toLowerCase().includes("sublot");
+              return (
+                <div className="calculator-transportation-location-option">
+                  <span>{name}</span>
+                  {status && (
+                    <span className={`calculator-transportation-location-badge ${isSublot ? "sublot" : "standard"}`}>
+                      {status.replace(")", "")}
+                    </span>
+                  )}
+                </div>
+              );
+            }}
           />
           <div className="calculator-transportation-shipping-info-item-ports">
             <Autocomplete
@@ -144,6 +165,9 @@ const Transportation = ({
             />
           </div>
         </div>
+      </div>
+      <div className="calculator-transportation-title-document">
+        <Label>Title document</Label>
       </div>
     </div>
   );

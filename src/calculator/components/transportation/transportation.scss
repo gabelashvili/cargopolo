@@ -51,4 +51,34 @@
     flex-direction: row !important;
     gap: 8px !important;
   }
+  &-title-document {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+
+  &-location-option {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+  }
+
+  &-location-badge {
+    font-size: 11px !important;
+    font-weight: 600 !important;
+    padding: 2px 8px !important;
+    border-radius: 12px !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+
+    &.sublot {
+      background-color: rgba(231, 76, 60, 0.1) !important;
+      color: #e74c3c !important;
+    }
+
+    &.standard {
+      background-color: rgba(65, 173, 73, 0.1) !important;
+      color: #41ad49 !important;
+    }
+  }
 }
