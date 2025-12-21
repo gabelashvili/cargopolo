@@ -218,20 +218,33 @@ const Transportation = ({
         <Radio
           name="insuranceType"
           options={[
-            { value: "auction", label: `${user.data?.insuranceByAuctionFee}% (with auction photos)` },
-            { value: "warehouse", label: `${user.data?.insuranceByWarehouseFee}% (with warehouse photos)` },
+            {
+              value: "auction",
+              label:
+                user.isLoading || !user.data
+                  ? "Loading... (with auction photos)"
+                  : `${user.data.insuranceByAuctionFee}% (with auction photos)`,
+            },
+            {
+              value: "warehouse",
+              label:
+                user.isLoading || !user.data
+                  ? "Loading... (with warehouse photos)"
+                  : `${user.data.insuranceByWarehouseFee}% (with warehouse photos)`,
+            },
             { value: "basic", label: "Basic" },
           ]}
           value={values.insuranceType}
           onChange={(val) => setValue("transportation.insuranceType", val as "basic" | "auction" | "warehouse")}
+          disabled={user.isLoading || !user.data}
+        />
+        <PriceSection
+          price={groundFee.data?.fee || 0}
+          label="Price:"
+          loading={groundFee.isFetching}
+          showCallToAction={groundFee.data && (!groundFee.data.groundRate || !groundFee.data.oceanRate)}
         />
       </div>
-      <PriceSection
-        price={groundFee.data?.fee || 0}
-        label="Price:"
-        loading={groundFee.isFetching}
-        showCallToAction={groundFee.data && (!groundFee.data.groundRate || !groundFee.data.oceanRate)}
-      />
     </div>
   );
 };
