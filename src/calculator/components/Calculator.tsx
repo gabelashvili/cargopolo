@@ -13,12 +13,14 @@ import { useGroundFee } from "../services/ground-fee/ground-fee-queries";
 import { useUser } from "../services/user/user-queries";
 import { useAuctionCalculation } from "../services/auction/auction-queries";
 import { useTitles } from "../services/titles/titles-queries";
+import { useLocations } from "../services/locations/locations-queries";
 
 const Calculator = ({ auction }: { auction: Auction }) => {
   const [lotDetails, setLotDetails] = useState<LotDetails | null>(null);
   const user = useUser("p9fYUDsqcgr6OcVXBZUY23prmhOcul1R3sW2gHYroOKlKb7qnGn8OAYA3Jnu");
   const [titleQuery, setTitleQuery] = useState<string>("");
   const titles = useTitles(titleQuery);
+  const locations = useLocations(auction);
 
   const { watch, setValue } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -38,6 +40,8 @@ const Calculator = ({ auction }: { auction: Auction }) => {
       },
     },
   });
+
+  const selectedLocation = watch("transportation.shippingLocationId");
 
   const groundFee = useGroundFee({
     consolidationType: watch("transportation.containerType"),
@@ -88,6 +92,17 @@ const Calculator = ({ auction }: { auction: Auction }) => {
     }
   }, [auction, lotDetails]);
 
+  useEffect(() => {
+    if (lotDetails && !selectedLocation) {
+      const location = locations.data?.find(
+        (location) => location.name === `${lotDetails.saleState}-${lotDetails.saleCity}`,
+      );
+      if (location) {
+        setValue("transportation.shippingLocationId", location.id);
+      }
+    }
+  }, [locations.data, lotDetails, selectedLocation, setValue]);
+
   return (
     <div className="calculator">
       <Header />
@@ -97,11 +112,11 @@ const Calculator = ({ auction }: { auction: Auction }) => {
           user={user}
           values={watch("transportation")}
           setValue={setValue}
-          auction={auction}
           groundFee={groundFee}
           auctionFee={auctionFee}
           titles={titles}
           setTitleQuery={setTitleQuery}
+          locations={locations}
         />
         {totalPrice}
       </div>

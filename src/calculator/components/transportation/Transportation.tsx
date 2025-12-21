@@ -16,8 +16,6 @@ import "./transportation.scss";
 import type { FormData } from "../../schema";
 import type { UseFormSetValue } from "react-hook-form";
 import OptionSelector from "../../ui/option-selector/option-selector";
-import { useLocations } from "../../services/locations/locations-queries";
-import type { Auction } from "../../../types/common";
 import { useLocationRoutes } from "../../services/location-routes/location-routes-queries";
 import { useEffect, useMemo } from "react";
 import { useDestinationPorts } from "../../services/destination-ports/destination-ports-queries";
@@ -65,22 +63,21 @@ const Transportation = ({
   user,
   values,
   setValue,
-  auction,
   groundFee,
   auctionFee,
   titles,
   setTitleQuery,
+  locations,
 }: {
   values: FormData["transportation"];
   setValue: UseFormSetValue<FormData>;
-  auction: Auction;
   groundFee: UseQueryResult<GroundFeeResponse, Error>;
   user: UseQueryResult<UserData | null, Error>;
   auctionFee: UseQueryResult<AuctionCalculationRes, Error>;
   titles: UseQueryResult<Title[], Error>;
   setTitleQuery: (query: string) => void;
+  locations: UseQueryResult<Location[], Error>;
 }) => {
-  const locations = useLocations(auction);
   const locationRoutes = useLocationRoutes(values.shippingLocationId);
   const destinationPorts = useDestinationPorts(!user.data);
   const exitPort = locationRoutes.data?.[0].exitPort;
