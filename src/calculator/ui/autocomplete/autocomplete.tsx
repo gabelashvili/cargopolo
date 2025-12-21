@@ -26,21 +26,13 @@ interface AutocompleteProps {
   disabled?: boolean;
   loading?: boolean;
   noOptionsText?: string;
-  filterOptions?: (
-    options: AutocompleteOption[],
-    inputValue: string,
-  ) => AutocompleteOption[];
+  filterOptions?: (options: AutocompleteOption[], inputValue: string) => AutocompleteOption[];
   renderOption?: (props: RenderOptionProps) => ReactNode;
 }
 
-const defaultFilterOptions = (
-  options: AutocompleteOption[],
-  inputValue: string,
-): AutocompleteOption[] => {
+const defaultFilterOptions = (options: AutocompleteOption[], inputValue: string): AutocompleteOption[] => {
   const lowerInput = inputValue.toLowerCase();
-  return options.filter((option) =>
-    option.label.toLowerCase().includes(lowerInput),
-  );
+  return options.filter((option) => option.label.toLowerCase().includes(lowerInput));
 };
 
 const Autocomplete = ({
@@ -79,9 +71,7 @@ const Autocomplete = ({
     setSearchValue("");
     setIsOpen(true);
     // Get selected index from full options list since search is empty
-    const selectedIdx = value
-      ? options.findIndex((opt) => opt.value === value.value)
-      : -1;
+    const selectedIdx = value ? options.findIndex((opt) => opt.value === value.value) : -1;
     setHighlightedIndex(selectedIdx);
   };
 
@@ -102,24 +92,16 @@ const Autocomplete = ({
       const path = event.composedPath();
 
       // Check if click is on the input itself
-      const isInput =
-        inputRef.current &&
-        (path.includes(inputRef.current) || target === inputRef.current);
+      const isInput = inputRef.current && (path.includes(inputRef.current) || target === inputRef.current);
 
       // Check if click is inside the dropdown
-      const isDropdown =
-        listRef.current &&
-        (path.includes(listRef.current) || listRef.current.contains(target));
+      const isDropdown = listRef.current && (path.includes(listRef.current) || listRef.current.contains(target));
 
       // Check if click is on the label (which should close the dropdown)
-      const isLabel =
-        target.classList.contains("input-label") ||
-        target.closest(".input-label");
+      const isLabel = target.classList.contains("input-label") || target.closest(".input-label");
 
       // Check if click is on the toggle/clear icon
-      const isToggle =
-        target.closest(".autocomplete-toggle") ||
-        target.closest(".autocomplete-clear");
+      const isToggle = target.closest(".autocomplete-toggle") || target.closest(".autocomplete-clear");
 
       // Close if:
       // 1. Click is outside the wrapper entirely, OR
@@ -132,8 +114,7 @@ const Autocomplete = ({
 
     // Use capture phase to catch events before they bubble
     document.addEventListener("mousedown", handleClickOutside, true);
-    return () =>
-      document.removeEventListener("mousedown", handleClickOutside, true);
+    return () => document.removeEventListener("mousedown", handleClickOutside, true);
   }, [isOpen]);
 
   useEffect(() => {
@@ -152,10 +133,7 @@ const Autocomplete = ({
       const target = e.target as HTMLElement;
       const optionElement = target.closest("[data-option-index]");
       if (optionElement) {
-        const index = parseInt(
-          optionElement.getAttribute("data-option-index") || "-1",
-          10,
-        );
+        const index = parseInt(optionElement.getAttribute("data-option-index") || "-1", 10);
         if (index >= 0 && index < filteredOptions.length) {
           e.preventDefault();
           e.stopPropagation();
@@ -211,10 +189,7 @@ const Autocomplete = ({
         e.preventDefault();
         setHighlightedIndex((prev) => {
           // If nothing highlighted, start from selected item or end
-          if (prev < 0)
-            return selectedIndex >= 0
-              ? selectedIndex
-              : filteredOptions.length - 1;
+          if (prev < 0) return selectedIndex >= 0 ? selectedIndex : filteredOptions.length - 1;
           return prev > 0 ? prev - 1 : filteredOptions.length - 1;
         });
         break;
@@ -242,10 +217,7 @@ const Autocomplete = ({
   };
 
   const endIcon = (
-    <span
-      className="autocomplete-toggle"
-      onClick={() => !disabled && (isOpen ? closeDropdown() : openDropdown())}
-    >
+    <span className="autocomplete-toggle" onClick={() => !disabled && (isOpen ? closeDropdown() : openDropdown())}>
       {value ? (
         <span className="autocomplete-clear" onClick={handleClear}>
           ×
@@ -276,13 +248,9 @@ const Autocomplete = ({
       {isOpen && (
         <ul ref={listRef} className="autocomplete-dropdown">
           {loading ? (
-            <li className="autocomplete-option autocomplete-loading">
-              Loading...
-            </li>
+            <li className="autocomplete-option autocomplete-loading">Loading...</li>
           ) : filteredOptions.length === 0 ? (
-            <li className="autocomplete-option autocomplete-no-options">
-              {noOptionsText}
-            </li>
+            <li className="autocomplete-option autocomplete-no-options">{noOptionsText}</li>
           ) : (
             filteredOptions.map((option, index) => {
               const isHighlighted = highlightedIndex === index;

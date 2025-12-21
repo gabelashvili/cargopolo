@@ -8,6 +8,7 @@ import Auctions from "./auction/Auctions";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { schema, type FormData } from "../schema";
+import Transportation from "./transportation/Transportation";
 
 const Calculator = ({ auction }: { auction: Auction }) => {
   const [lotDetails, setLotDetails] = useState<LotDetails | null>(null);
@@ -43,6 +44,7 @@ const Calculator = ({ auction }: { auction: Auction }) => {
       <Header />
       <div className="calculator-content">
         <Auctions auction={auction} values={watch("auction")} setValue={setValue} />
+        <Transportation />
       </div>
     </div>
   );

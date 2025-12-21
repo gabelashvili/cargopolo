@@ -28,5 +28,8 @@ $calculator-background-gradient: linear-gradient(
 
   &-content {
     padding: 12px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
   }
 }
