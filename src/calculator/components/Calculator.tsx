@@ -52,7 +52,7 @@ const Calculator = ({ auction }: { auction: Auction }) => {
       <Header />
       <div className="calculator-content">
         <Auctions auction={auction} values={watch("auction")} setValue={setValue} />
-        <Transportation values={watch("transportation")} setValue={setValue} />
+        <Transportation values={watch("transportation")} setValue={setValue} auction={auction} />
       </div>
     </div>
   );

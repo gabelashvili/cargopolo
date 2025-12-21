@@ -36,4 +36,19 @@
     flex-direction: column !important;
     gap: 8px;
   }
+  &-shipping-info {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px;
+  }
+  &-shipping-info-item {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+  &-shipping-info-item-ports {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 8px !important;
+  }
 }

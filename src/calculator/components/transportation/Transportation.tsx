@@ -17,6 +17,8 @@ import "./transportation.scss";
 import type { FormData } from "../../schema";
 import type { UseFormSetValue } from "react-hook-form";
 import OptionSelector from "../../ui/option-selector/option-selector";
+import { useLocations } from "../../services/locations/locations-queries";
+import type { Auction } from "../../../types/common";
 
 export const VehicleTypes = {
   sedan: "Sedan",
@@ -53,11 +55,14 @@ const iconsPerType: Record<string, React.ComponentType> = {
 const Transportation = ({
   values,
   setValue,
+  auction,
 }: {
   values: FormData["transportation"];
   setValue: UseFormSetValue<FormData>;
+  auction: Auction;
 }) => {
-  console.log(values);
+  const locations = useLocations(auction);
+  console.log(values, 2223);
   return (
     <div className="calculator-transportation">
       <div className="calculator-transportation-vehicle-type">
@@ -93,8 +98,37 @@ const Transportation = ({
             { value: "3 Vehicles", label: "3 Vehicles" },
           ]}
           value={values.containerType}
-          onChange={(val) => setValue("transportation.containerType", val)}
+          onChange={(val) => setValue("transportation.containerType", val as "4 Vehicles" | "3 Vehicles")}
         />
+      </div>
+      <div className="calculator-transportation-shipping-info">
+        <Label>Shipping Info</Label>
+        <div className="calculator-transportation-shipping-info-item">
+          <Autocomplete
+            options={locations.data?.map((location) => ({ value: location.id.toString(), label: location.name })) || []}
+            value={values.shippingLocationId.toString()}
+            onChange={(val) => setValue("transportation.shippingLocationId", Number(val))}
+            loading={!locations.data}
+          />
+          <div className="calculator-transportation-shipping-info-item-ports">
+            <Autocomplete
+              options={
+                locations.data?.map((location) => ({ value: location.id.toString(), label: location.name })) || []
+              }
+              value={values.shippingLocationId.toString()}
+              onChange={(val) => setValue("transportation.shippingLocationId", Number(val))}
+              loading={!locations.data}
+            />
+            <Autocomplete
+              options={
+                locations.data?.map((location) => ({ value: location.id.toString(), label: location.name })) || []
+              }
+              value={values.shippingLocationId.toString()}
+              onChange={(val) => setValue("transportation.shippingLocationId", Number(val))}
+              loading={!locations.data}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );
