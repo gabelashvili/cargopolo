@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect, type ReactNode } from "react";
-import Input from "./input";
-import { ChevronDownIcon } from "./icons";
+import Input from "../input/input";
+import { ChevronDownIcon } from "../icons";
 import "./autocomplete.scss";
 
 export interface AutocompleteOption {

@@ -1,16 +1,4 @@
-// Import all styles for Shadow DOM
-@use "../calculator/styles/fonts.scss";
-@use "../calculator/styles/mixins.scss";
-@use "../calculator/components/calculator.scss";
-@use "../calculator/components/header/header.scss";
-@use "../calculator/components/price-section.scss";
-@use "../calculator/ui/label.scss";
-@use "../calculator/ui/input.scss";
-@use "../calculator/ui/autocomplete.scss";
-@use "../calculator/ui/radio.scss";
-@use "../calculator/ui/option-selector.scss";
 
-// Base reset for Shadow DOM
 :host {
   all: initial !important;
   display: block !important;

@@ -134,7 +134,7 @@ export const injector = async (url: string, previousController?: AbortController
     const el = await promise;
     console.log("[CP]: Element:", el);
     if (el) {
-      injectReactBefore(() => <Calculator />, el, "cargopolo-calculator-root");
+      injectReactBefore(() => <Calculator auction={auction} />, el, "cargopolo-calculator-root");
 
       console.log("[CP]: Found element:", el);
       // TODO: inject your React component here

@@ -1,16 +1,8 @@
-import {
-  forwardRef,
-  type InputHTMLAttributes,
-  type ReactNode,
-  type Ref,
-} from "react";
+import { forwardRef, type InputHTMLAttributes, type ReactNode, type Ref } from "react";
 import { NumericFormat, type NumericFormatProps } from "react-number-format";
 import "./input.scss";
 
-type BaseInputProps = Omit<
-  InputHTMLAttributes<HTMLInputElement>,
-  "onChange" | "value" | "type"
-> & {
+type BaseInputProps = Omit<InputHTMLAttributes<HTMLInputElement>, "onChange" | "value" | "type"> & {
   value?: string | number;
   onChange?: (value: number | string) => void;
   label?: string;
@@ -25,10 +17,7 @@ export type InputProps = BaseInputProps &
     | {
         type?: Exclude<InputHTMLAttributes<HTMLInputElement>["type"], "number">;
       }
-    | ({ type: "number" } & Omit<
-        NumericFormatProps,
-        "onValueChange" | "customInput" | "value" | "type"
-      >)
+    | ({ type: "number" } & Omit<NumericFormatProps, "onValueChange" | "customInput" | "value" | "type" | "onChange">)
   );
 
 const InputWrapper = forwardRef<
@@ -41,16 +30,8 @@ const InputWrapper = forwardRef<
 });
 
 const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
-  const {
-    placeholder,
-    startIcon,
-    endIcon,
-    required,
-    rootClassName,
-    ...restProps
-  } = props;
-  const hasValue =
-    props.value !== undefined && props.value !== "" && props.value !== null;
+  const { placeholder, startIcon, endIcon, required, rootClassName, ...restProps } = props;
+  const hasValue = props.value !== undefined && props.value !== "" && props.value !== null;
   const hasStartIcon = !!startIcon;
   const hasEndIcon = !!endIcon;
 
@@ -70,13 +51,13 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
     return (
       <div className={rootClasses}>
         <div className={wrapperClasses}>
-          {startIcon && (
-            <span className="input-icon input-icon-start">{startIcon}</span>
-          )}
+          {startIcon && <span className="input-icon input-icon-start">{startIcon}</span>}
           <NumericFormat
             {...(numericProps as NumericFormatProps)}
+            type={"text"}
             getInputRef={ref as Ref<HTMLInputElement>}
             onValueChange={(values) => {
+              console.log(values);
               onChange?.(values.value);
             }}
             customInput={InputWrapper}
@@ -88,9 +69,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
               {required && <span className="input-required">*</span>}
             </label>
           )}
-          {endIcon && (
-            <span className="input-icon input-icon-end">{endIcon}</span>
-          )}
+          {endIcon && <span className="input-icon input-icon-end">{endIcon}</span>}
         </div>
       </div>
     );
@@ -100,24 +79,15 @@ const Input = forwardRef<HTMLInputElement, InputProps>((props, ref) => {
   return (
     <div className={rootClasses}>
       <div className={wrapperClasses}>
-        {startIcon && (
-          <span className="input-icon input-icon-start">{startIcon}</span>
-        )}
-        <InputWrapper
-          ref={ref}
-          {...inputProps}
-          onChange={(e) => onChange?.(e.target.value)}
-          placeholder=" "
-        />
+        {startIcon && <span className="input-icon input-icon-start">{startIcon}</span>}
+        <InputWrapper ref={ref} {...inputProps} onChange={(e) => onChange?.(e.target.value)} placeholder=" " />
         {placeholder && (
           <label className="input-placeholder">
             {placeholder}
             {required && <span className="input-required">*</span>}
           </label>
         )}
-        {endIcon && (
-          <span className="input-icon input-icon-end">{endIcon}</span>
-        )}
+        {endIcon && <span className="input-icon input-icon-end">{endIcon}</span>}
       </div>
     </div>
   );

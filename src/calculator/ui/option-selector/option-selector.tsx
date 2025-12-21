@@ -8,28 +8,19 @@ export interface OptionSelectorOption {
 
 interface OptionSelectorProps {
   options: OptionSelectorOption[];
-  value?: string | number;
-  onChange?: (value: string | number) => void;
+  value?: string;
+  onChange?: (value: string) => void;
   name: string;
   className?: string;
 }
 
-const OptionSelector = ({
-  options,
-  value,
-  onChange,
-  name,
-  className,
-}: OptionSelectorProps) => {
+const OptionSelector = ({ options, value, onChange, name, className }: OptionSelectorProps) => {
   return (
     <div className={`option-selector ${className || ""}`}>
       {options.map((option) => {
         const isSelected = value === option.value;
         return (
-          <label
-            key={option.value}
-            className={`option-selector-item ${isSelected ? "selected" : ""}`}
-          >
+          <label key={option.value} className={`option-selector-item ${isSelected ? "selected" : ""}`}>
             <input
               type="radio"
               name={name}
