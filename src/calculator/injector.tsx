@@ -1,4 +1,6 @@
-import type { Auction } from "../types/common";
+import { createRoot, type Root } from "react-dom/client";
+import type { ReactNode } from "react";
+import Calculator from "./components/Calculator";
 
 export function matchAuctionUrl(url: string): "copart" | "iaai" | null {
   // Copart: /lot/{lotNumber}/...
@@ -10,6 +12,39 @@ export function matchAuctionUrl(url: string): "copart" | "iaai" | null {
   if (copartPattern.test(url)) return "copart";
   if (iaaiPattern.test(url)) return "iaai";
   return null;
+}
+
+export function injectReactBefore(
+  component: () => ReactNode,
+  targetElement: Element,
+  id?: string,
+): { rootElement: HTMLElement; reactRoot: Root; shadowRoot: ShadowRoot } {
+  // Create host container
+  const host = document.createElement("div");
+  if (id) host.id = id;
+
+  // Insert before target element
+  targetElement.parentNode?.insertBefore(host, targetElement);
+
+  // Create Shadow DOM
+  const shadow = host.attachShadow({ mode: "open" });
+
+  // Optional CSS reset
+  const resetStyle = document.createElement("style");
+  resetStyle.textContent = `
+      :host { all: initial; display: block; }
+    `;
+  shadow.appendChild(resetStyle);
+
+  // Create container for React
+  const container = document.createElement("div");
+  shadow.appendChild(container);
+
+  // Render React component
+  const reactRoot = createRoot(container);
+  reactRoot.render(component());
+
+  return { rootElement: host, reactRoot, shadowRoot: shadow };
 }
 
 export function tryFindElement(
@@ -68,7 +103,7 @@ export const injector = async (url: string, previousController?: AbortController
     console.error("[CP]: Invalid URL", url);
     return null;
   }
-  const selector = auction === "iaai" ? ".bid-info-marketing-description" : ".llbid-information-section.cprt-panel";
+  const selector = auction === "iaai" ? ".bid-info-marketing-description" : ".bid-information-section.cprt-panel";
 
   const { promise, controller } = tryFindElement(selector, undefined, undefined, previousController);
   console.log("[CP]: Promise:", promise, "Controller:", controller);
@@ -76,6 +111,8 @@ export const injector = async (url: string, previousController?: AbortController
     const el = await promise;
     console.log("[CP]: Element:", el);
     if (el) {
+      injectReactBefore(() => <Calculator />, el);
+
       console.log("[CP]: Found element:", el);
       // TODO: inject your React component here
     } else {
