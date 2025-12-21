@@ -7,7 +7,7 @@ let abortController: AbortController | undefined = undefined;
 
 async function handleRouteChange(url: string) {
   console.log("[CS] Route changed:", url);
-  abortController = await injector(url, abortController);
+  abortController = (await injector(url, abortController)) ?? undefined;
 }
 
 function init() {
