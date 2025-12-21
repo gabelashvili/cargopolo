@@ -1,6 +1,6 @@
 import { createRoot, type Root } from "react-dom/client";
 import type { ReactNode } from "react";
-import Calculator from "./components/Calculator";
+import CalculatorWrapper from "./components/CalculatorWrapper";
 
 export function matchAuctionUrl(url: string): "copart" | "iaai" | null {
   // Copart: /lot/{lotNumber}/...
@@ -134,7 +134,7 @@ export const injector = async (url: string, previousController?: AbortController
     const el = await promise;
     console.log("[CP]: Element:", el);
     if (el) {
-      injectReactBefore(() => <Calculator auction={auction} />, el, "cargopolo-calculator-root");
+      injectReactBefore(() => <CalculatorWrapper auction={auction} />, el, "cargopolo-calculator-root");
 
       console.log("[CP]: Found element:", el);
       // TODO: inject your React component here

@@ -1,7 +1,7 @@
-import Calculator from "./calculator/components/Calculator";
+import CalculatorWrapper from "./calculator/components/CalculatorWrapper";
 
 function App() {
-  return <Calculator />;
+  return <CalculatorWrapper auction="iaai" />;
 }
 
 export default App;
