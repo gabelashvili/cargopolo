@@ -40,13 +40,6 @@ const Calculator = ({ auction }: { auction: Auction }) => {
     locationId: watch("transportation.shippingLocationId"),
   });
 
-  console.log({
-    consolidationType: watch("transportation.containerType"),
-    vehicleType: watch("transportation.vehicleType"),
-    exitPortId: watch("transportation.exitPortId"),
-    destinationPortId: watch("transportation.deliveryPortId"),
-    locationId: watch("transportation.shippingLocationId"),
-  });
 
   // Listen for lot details from content script
   useEffect(() => {
@@ -69,7 +62,7 @@ const Calculator = ({ auction }: { auction: Auction }) => {
       <Header />
       <div className="calculator-content">
         <Auctions auction={auction} values={watch("auction")} setValue={setValue} />
-        <Transportation values={watch("transportation")} setValue={setValue} auction={auction} />
+        <Transportation values={watch("transportation")} setValue={setValue} auction={auction} groundFee={groundFee} />
       </div>
     </div>
   );

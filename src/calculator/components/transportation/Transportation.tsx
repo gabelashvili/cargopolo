@@ -22,6 +22,9 @@ import { useLocationRoutes } from "../../services/location-routes/location-route
 import { useEffect, useMemo } from "react";
 import { useDestinationPorts } from "../../services/destination-ports/destination-ports-queries";
 import { useTitles } from "../../services/titles/titles-queries";
+import PriceSection from "../PriceSection";
+import type { UseQueryResult } from "@tanstack/react-query";
+import type { GroundFeeResponse } from "../../services/ground-fee/ground-fee";
 
 export const VehicleTypes = {
   sedan: "Sedan",
@@ -59,10 +62,12 @@ const Transportation = ({
   values,
   setValue,
   auction,
+  groundFee,
 }: {
   values: FormData["transportation"];
   setValue: UseFormSetValue<FormData>;
   auction: Auction;
+  groundFee: UseQueryResult<GroundFeeResponse, Error>;
 }) => {
   const locations = useLocations(auction);
   const locationRoutes = useLocationRoutes(values.shippingLocationId);
@@ -196,6 +201,12 @@ const Transportation = ({
           }}
         />
       </div>
+      <PriceSection
+        price={groundFee.data?.fee || 0}
+        label="Price:"
+        loading={groundFee.isFetching}
+        showCallToAction={groundFee.data && (!groundFee.data.groundRate || !groundFee.data.oceanRate)}
+      />
     </div>
   );
 };
