@@ -1,41 +1,21 @@
-// Service Worker for Cargopolo Calculator Extension
+chrome.webNavigation.onHistoryStateUpdated.addListener((details) => {
+  if (details.frameId !== 0) return;
 
-console.log('[Cargopolo] Service Worker initialized')
+  console.log("[BG] SPA navigation:", details.url);
 
-// Install event
-chrome.runtime.onInstalled.addListener(details => {
-  console.log('[Cargopolo] Extension installed/updated:', details.reason)
+  chrome.tabs.sendMessage(details.tabId, {
+    type: "URL_CHANGED",
+    url: details.url,
+  });
+});
 
-  if (details.reason === 'install') {
-    console.log('[Cargopolo] First time installation')
-  } else if (details.reason === 'update') {
-    console.log('[Cargopolo] Extension updated')
-  }
-})
+chrome.webNavigation.onCommitted.addListener((details) => {
+  if (details.frameId !== 0) return;
 
-// Handle messages from content scripts or popup
-chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-  console.log('[Cargopolo] Message received:', message)
+  console.log("[BG] Navigation committed:", details.url);
 
-  // Handle different message types
-  switch (message.type) {
-    case 'ping':
-      sendResponse({ success: true, message: 'pong' })
-      break
-    case 'LOT_DETAILS_PARSED':
-      // Content script parsed lot details, can store or process here
-      console.log('[Cargopolo] Lot details parsed:', message.data)
-      sendResponse({ success: true })
-      break
-    default:
-      sendResponse({ success: false, message: 'Unknown message type' })
-  }
-
-  return true // Keep the message channel open for async response
-})
-
-// Handle extension icon click (if you add a popup later)
-chrome.action.onClicked.addListener(tab => {
-  console.log('[Cargopolo] Extension icon clicked on tab:', tab.id)
-  // You can add logic here to open a popup or perform actions
-})
+  chrome.tabs.sendMessage(details.tabId, {
+    type: "URL_CHANGED",
+    url: details.url,
+  });
+});

@@ -6,7 +6,10 @@ export interface RadioOption {
   label: string;
 }
 
-interface RadioProps extends Omit<InputHTMLAttributes<HTMLInputElement>, "type" | "onChange"> {
+interface RadioProps extends Omit<
+  InputHTMLAttributes<HTMLInputElement>,
+  "type" | "onChange"
+> {
   label?: string;
   options: RadioOption[];
   value?: string | number;
@@ -35,7 +38,9 @@ const Radio = forwardRef<HTMLInputElement, RadioProps>(
                   }}
                   {...restProps}
                 />
-                <span className={`radio-button ${isSelected ? "selected" : ""}`} />
+                <span
+                  className={`radio-button ${isSelected ? "selected" : ""}`}
+                />
                 <span className="radio-label">{option.label}</span>
               </label>
             );

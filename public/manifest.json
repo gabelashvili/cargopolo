@@ -3,7 +3,7 @@
   "name": "Cargopolo Calculator",
   "version": "1.0.0",
   "description": "Calculator extension for Cargopolo",
-  "permissions": ["tabs"],
+  "permissions": ["tabs", "activeTab", "webNavigation"],
   "host_permissions": [
     "https://www.iaai.com/*",
     "https://www.copart.com/*"
@@ -16,7 +16,7 @@
       "matches": ["<all_urls>"],
       "js": ["content.js"],
       "type": "module",
-      "run_at": "document_idle"
+      "run_at": "document_end"
     }
   ],
   "web_accessible_resources": [

@@ -6,7 +6,11 @@ interface PriceSectionProps {
   className?: string;
 }
 
-const PriceSection = ({ price, label = "Price:", className }: PriceSectionProps) => {
+const PriceSection = ({
+  price,
+  label = "Price:",
+  className,
+}: PriceSectionProps) => {
   return (
     <div className={`price-section ${className || ""}`}>
       <div className="price-section-content">

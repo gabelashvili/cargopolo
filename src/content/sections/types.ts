@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 
 export interface TargetConfig {
   selector: string;
-  insertPosition: "before" | "after" | "prepend" | "append";
+  insertPosition: "beforebegin" | "afterbegin" | "beforeend" | "afterend";
 }
 
 export interface SectionConfig {
@@ -10,8 +10,4 @@ export interface SectionConfig {
   name: string;
   targets: TargetConfig | TargetConfig[];
   component: () => ReactNode;
-}
-
-export interface SectionRegistry {
-  [key: string]: SectionConfig;
 }

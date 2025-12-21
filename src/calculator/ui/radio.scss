@@ -28,7 +28,7 @@ $radio-label-font-weight: 400;
     gap: 8px !important;
     cursor: pointer !important;
 
-    input[type='radio'] {
+    input[type="radio"] {
       position: absolute !important;
       opacity: 0 !important;
       pointer-events: none !important;
@@ -52,7 +52,7 @@ $radio-label-font-weight: 400;
         background-color: transparent !important;
 
         &::before {
-          content: '' !important;
+          content: "" !important;
           position: absolute !important;
           top: 50% !important;
           left: 50% !important;
@@ -77,4 +77,3 @@ $radio-label-font-weight: 400;
     }
   }
 }
-

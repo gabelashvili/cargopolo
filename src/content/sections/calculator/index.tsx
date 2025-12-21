@@ -1,17 +1,17 @@
-import Calculator from '../../../calculator/components/Calculator'
-import type { SectionConfig } from '../types'
+import Calculator from "../../../calculator/components/Calculator";
+import type { SectionConfig } from "../types";
 
 export const calculatorSection: SectionConfig = {
-  id: 'cargopolo-calculator',
-  name: 'Calculator',
+  id: "cargopolo-calculator",
+  name: "Calculator",
   targets: [
     {
-      selector: '.bid-information-section.cprt-panel',
-      insertPosition: 'before',
+      selector: ".bid-information-section.cprt-panel",
+      insertPosition: "before",
     },
     {
-      selector: '#vdActionInfo',
-      insertPosition: 'before',
+      selector: "#vdActionInfo",
+      insertPosition: "before",
     },
     // Add more targets as needed
     // {
@@ -20,4 +20,4 @@ export const calculatorSection: SectionConfig = {
     // },
   ],
   component: () => <Calculator />,
-}
+};
