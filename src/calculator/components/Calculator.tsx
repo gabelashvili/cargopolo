@@ -11,6 +11,7 @@ import { schema, type FormData } from "../schema";
 import Transportation from "./transportation/Transportation";
 import { useGroundFee } from "../services/ground-fee/ground-fee-queries";
 import { useUser } from "../services/user/user-queries";
+import { useAuctionCalculation } from "../services/auction/auction-queries";
 
 const Calculator = ({ auction }: { auction: Auction }) => {
   const [lotDetails, setLotDetails] = useState<LotDetails | null>(null);
@@ -43,6 +44,12 @@ const Calculator = ({ auction }: { auction: Auction }) => {
     locationId: watch("transportation.shippingLocationId"),
   });
 
+  const auctionFee = useAuctionCalculation({
+    cost: watch("auction.cost"),
+    feeType: watch("auction.feeType"),
+    auction: watch("auction.auction"),
+  });
+
   // Listen for lot details from content script
   useEffect(() => {
     if (auction === "iaai") {
@@ -63,13 +70,14 @@ const Calculator = ({ auction }: { auction: Auction }) => {
     <div className="calculator">
       <Header />
       <div className="calculator-content">
-        <Auctions auction={auction} values={watch("auction")} setValue={setValue} />
+        <Auctions auction={auction} values={watch("auction")} setValue={setValue} auctionFee={auctionFee} />
         <Transportation
           user={user}
           values={watch("transportation")}
           setValue={setValue}
           auction={auction}
           groundFee={groundFee}
+          auctionFee={auctionFee}
         />
       </div>
     </div>

@@ -27,6 +27,7 @@ import type { UseQueryResult } from "@tanstack/react-query";
 import type { GroundFeeResponse } from "../../services/ground-fee/ground-fee";
 import type { UserData } from "../../services/user/user";
 import Radio from "../../ui/radio/radio";
+import type { AuctionCalculationRes } from "../../services/auction/auction";
 
 export const VehicleTypes = {
   sedan: "Sedan",
@@ -66,12 +67,14 @@ const Transportation = ({
   setValue,
   auction,
   groundFee,
+  auctionFee,
 }: {
   values: FormData["transportation"];
   setValue: UseFormSetValue<FormData>;
   auction: Auction;
   groundFee: UseQueryResult<GroundFeeResponse, Error>;
   user: UseQueryResult<UserData | null, Error>;
+  auctionFee: UseQueryResult<AuctionCalculationRes, Error>;
 }) => {
   const [titleQuery, setTitleQuery] = useState<string>("");
   const locations = useLocations(auction);
@@ -83,6 +86,28 @@ const Transportation = ({
     () => (exitPort ? [{ value: exitPort.id.toString(), label: exitPort.name }] : []),
     [exitPort],
   );
+
+  const totalPrice = useMemo(() => {
+    const auctionPrice = auctionFee.data?.totalCost || 0;
+    const groundFeePrice = groundFee.data?.price || 0;
+    let insurancePrice = 0;
+    if (values.insuranceType !== "basic" && user.data) {
+      const percent =
+        values.insuranceType === "auction" ? user.data.insuranceByAuctionFee : user.data?.insuranceByWarehouseFee;
+      insurancePrice = (auctionPrice * percent) / 100;
+    }
+    const titlePrice = titles.data?.find((title) => title.id === values.titleDocumentId)?.price || 0;
+
+    const sum = auctionPrice + groundFeePrice + insurancePrice + titlePrice;
+    return sum;
+  }, [
+    auctionFee.data?.totalCost,
+    groundFee.data?.price,
+    titles.data,
+    user.data,
+    values.insuranceType,
+    values.titleDocumentId,
+  ]);
 
   useEffect(() => {
     if (exitPortsOptions.length === 1) {
@@ -96,7 +121,7 @@ const Transportation = ({
     }
   }, [setValue, user.data]);
 
-  console.log(user.data);
+  console.log(groundFee.data);
   return (
     <div className="calculator-transportation">
       <div className="calculator-transportation-vehicle-type">
@@ -239,11 +264,12 @@ const Transportation = ({
           disabled={user.isLoading || !user.data}
         />
         <PriceSection
-          price={groundFee.data?.fee || 0}
+          price={groundFee.data?.price || 0}
           label="Price:"
           loading={groundFee.isFetching}
-          showCallToAction={groundFee.data && (!groundFee.data.groundRate || !groundFee.data.oceanRate)}
+          // showCallToAction={groundFee.data && (!groundFee.data.groundRate || !groundFee.data.oceanRate)}
         />
+        {totalPrice}
       </div>
     </div>
   );

@@ -7,21 +7,18 @@ import "./auctions.scss";
 import { useEffect, useRef } from "react";
 import type { FormData } from "../../schema";
 import PriceSection from "../PriceSection";
-import { useAuctionCalculation } from "../../services/auction/auction-queries";
+import type { AuctionCalculationRes } from "../../services/auction/auction";
+import type { UseQueryResult } from "@tanstack/react-query";
 
 interface AuctionsProps {
   auction: Auction;
   values: FormData["auction"];
   setValue: UseFormSetValue<FormData>;
+  auctionFee: UseQueryResult<AuctionCalculationRes, Error>;
 }
 
-export default function Auction({ values, setValue }: AuctionsProps) {
+export default function Auction({ values, setValue, auctionFee }: AuctionsProps) {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const { data, isLoading } = useAuctionCalculation({
-    cost: values.cost,
-    feeType: values.feeType,
-    auction: values.auction,
-  });
 
   useEffect(() => {
     return () => {
@@ -62,7 +59,7 @@ export default function Auction({ values, setValue }: AuctionsProps) {
           onChange={(v) => setValue("auction.feeType", v as "low" | "high")}
         />
       </div>
-      <PriceSection price={data?.totalCost || 0} label="Price:" loading={isLoading} />
+      <PriceSection price={auctionFee.data?.totalCost || 0} label="Price:" loading={auctionFee.isFetching} />
     </section>
   );
 }

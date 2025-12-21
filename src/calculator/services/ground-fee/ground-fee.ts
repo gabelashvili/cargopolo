@@ -7,7 +7,7 @@ export interface GroundFeeRequestParams {
 }
 
 export interface GroundFeeResponse {
-  fee: number;
+  price: number;
   groundRate: boolean;
   oceanRate: boolean;
 }
