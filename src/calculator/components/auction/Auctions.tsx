@@ -7,6 +7,7 @@ import "./auctions.scss";
 import { useEffect, useRef } from "react";
 import type { FormData } from "../../schema";
 import PriceSection from "../PriceSection";
+import { useAuctionCalculation } from "../../services/auction/auction-queries";
 
 interface AuctionsProps {
   auction: Auction;
@@ -16,6 +17,11 @@ interface AuctionsProps {
 
 export default function Auction({ values, setValue }: AuctionsProps) {
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { data, isLoading } = useAuctionCalculation({
+    cost: values.cost,
+    feeType: values.feeType,
+    auction: values.auction,
+  });
 
   useEffect(() => {
     return () => {
@@ -37,12 +43,11 @@ export default function Auction({ values, setValue }: AuctionsProps) {
         thousandSeparator=","
         decimalScale={2}
         onChange={(v) => {
-          setValue("auction.cost", Number(v));
           if (timerRef.current) {
             clearTimeout(timerRef.current);
           }
           timerRef.current = setTimeout(() => {
-            console.log("12");
+            setValue("auction.cost", Number(v));
           }, 500);
         }}
       />
@@ -57,7 +62,7 @@ export default function Auction({ values, setValue }: AuctionsProps) {
           onChange={(v) => setValue("auction.feeType", v as "low" | "high")}
         />
       </div>
-      <PriceSection price={1213} label="Price:" />
+      <PriceSection price={data?.totalCost || 0} label="Price:" loading={isLoading} />
     </section>
   );
 }

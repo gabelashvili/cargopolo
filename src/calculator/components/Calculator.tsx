@@ -41,7 +41,9 @@ const Calculator = ({ auction }: { auction: Auction }) => {
   return (
     <div className="calculator">
       <Header />
-      <Auctions auction={auction} values={watch("auction")} setValue={setValue} />
+      <div className="calculator-content">
+        <Auctions auction={auction} values={watch("auction")} setValue={setValue} />
+      </div>
     </div>
   );
 };
