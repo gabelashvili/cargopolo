@@ -10,9 +10,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { schema, type FormData } from "../schema";
 import Transportation from "./transportation/Transportation";
 import { useGroundFee } from "../services/ground-fee/ground-fee-queries";
+import { useUser } from "../services/user/user-queries";
 
 const Calculator = ({ auction }: { auction: Auction }) => {
   const [lotDetails, setLotDetails] = useState<LotDetails | null>(null);
+  const user = useUser("p9fYUDsqcgr6OcVXBZUY23prmhOcul1R3sW2gHYroOKlKb7qnGn8OAYA3Jnu");
+
   const { watch, setValue } = useForm<FormData>({
     resolver: zodResolver(schema),
     defaultValues: {
@@ -40,7 +43,6 @@ const Calculator = ({ auction }: { auction: Auction }) => {
     locationId: watch("transportation.shippingLocationId"),
   });
 
-
   // Listen for lot details from content script
   useEffect(() => {
     if (auction === "iaai") {
@@ -62,7 +64,13 @@ const Calculator = ({ auction }: { auction: Auction }) => {
       <Header />
       <div className="calculator-content">
         <Auctions auction={auction} values={watch("auction")} setValue={setValue} />
-        <Transportation values={watch("transportation")} setValue={setValue} auction={auction} groundFee={groundFee} />
+        <Transportation
+          user={user}
+          values={watch("transportation")}
+          setValue={setValue}
+          auction={auction}
+          groundFee={groundFee}
+        />
       </div>
     </div>
   );

@@ -25,6 +25,7 @@ import { useTitles } from "../../services/titles/titles-queries";
 import PriceSection from "../PriceSection";
 import type { UseQueryResult } from "@tanstack/react-query";
 import type { GroundFeeResponse } from "../../services/ground-fee/ground-fee";
+import type { UserData } from "../../services/user/user";
 
 export const VehicleTypes = {
   sedan: "Sedan",
@@ -59,6 +60,7 @@ const iconsPerType: Record<string, React.ComponentType> = {
 };
 
 const Transportation = ({
+  user,
   values,
   setValue,
   auction,
@@ -68,10 +70,11 @@ const Transportation = ({
   setValue: UseFormSetValue<FormData>;
   auction: Auction;
   groundFee: UseQueryResult<GroundFeeResponse, Error>;
+  user: UseQueryResult<UserData | null, Error>;
 }) => {
   const locations = useLocations(auction);
   const locationRoutes = useLocationRoutes(values.shippingLocationId);
-  const destinationPorts = useDestinationPorts();
+  const destinationPorts = useDestinationPorts(!user.data);
   const titles = useTitles();
   const exitPort = locationRoutes.data?.[0].exitPort;
   const exitPortsOptions = useMemo(
@@ -79,13 +82,17 @@ const Transportation = ({
     [exitPort],
   );
 
-  console.log(titles.data);
-
   useEffect(() => {
     if (exitPortsOptions.length === 1) {
       setValue("transportation.exitPortId", Number(exitPortsOptions[0].value));
     }
   }, [exitPort, exitPortsOptions, setValue]);
+
+  useEffect(() => {
+    if (user.data) {
+      setValue("transportation.deliveryPortId", user.data.mainDestinationPort);
+    }
+  }, [setValue, user.data]);
   return (
     <div className="calculator-transportation">
       <div className="calculator-transportation-vehicle-type">
@@ -166,7 +173,7 @@ const Transportation = ({
               options={destinationPorts.data?.map((port) => ({ value: port.id.toString(), label: port.name })) || []}
               value={values.deliveryPortId.toString()}
               onChange={(val) => setValue("transportation.deliveryPortId", Number(val))}
-              loading={!destinationPorts.data}
+              loading={!destinationPorts.data || !user}
             />
           </div>
         </div>

@@ -6,11 +6,13 @@ export const destinationPortsKeys = {
 };
 
 export const useDestinationPorts = (
+  disabled: boolean,
   options?: Omit<UseQueryOptions<DestinationPort[], Error>, "queryKey" | "queryFn">,
 ) => {
   return useQuery<DestinationPort[], Error>({
     queryKey: destinationPortsKeys.all,
     queryFn: () => getDestinationPortsApi(),
+    enabled: !disabled,
     ...options,
   });
 };
