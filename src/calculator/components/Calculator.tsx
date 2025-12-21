@@ -9,6 +9,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { schema, type FormData } from "../schema";
 import Transportation from "./transportation/Transportation";
+import { useGroundFee } from "../services/ground-fee/ground-fee-queries";
 
 const Calculator = ({ auction }: { auction: Auction }) => {
   const [lotDetails, setLotDetails] = useState<LotDetails | null>(null);
@@ -29,6 +30,22 @@ const Calculator = ({ auction }: { auction: Auction }) => {
         vehicleType: "",
       },
     },
+  });
+
+  const groundFee = useGroundFee({
+    consolidationType: watch("transportation.containerType"),
+    vehicleType: watch("transportation.vehicleType"),
+    exitPortId: watch("transportation.exitPortId"),
+    destinationPortId: watch("transportation.deliveryPortId"),
+    locationId: watch("transportation.shippingLocationId"),
+  });
+
+  console.log({
+    consolidationType: watch("transportation.containerType"),
+    vehicleType: watch("transportation.vehicleType"),
+    exitPortId: watch("transportation.exitPortId"),
+    destinationPortId: watch("transportation.deliveryPortId"),
+    locationId: watch("transportation.shippingLocationId"),
   });
 
   // Listen for lot details from content script

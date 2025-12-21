@@ -20,6 +20,7 @@ import { useLocations } from "../../services/locations/locations-queries";
 import type { Auction } from "../../../types/common";
 import { useLocationRoutes } from "../../services/location-routes/location-routes-queries";
 import { useEffect, useMemo } from "react";
+import { useDestinationPorts } from "../../services/destination-ports/destination-ports-queries";
 
 export const VehicleTypes = {
   sedan: "Sedan",
@@ -64,11 +65,14 @@ const Transportation = ({
 }) => {
   const locations = useLocations(auction);
   const locationRoutes = useLocationRoutes(values.shippingLocationId);
+  const destinationPorts = useDestinationPorts();
   const exitPort = locationRoutes.data?.[0].exitPort;
   const exitPortsOptions = useMemo(
     () => (exitPort ? [{ value: exitPort.id.toString(), label: exitPort.name }] : []),
     [exitPort],
   );
+
+  console.log(destinationPorts.data);
 
   useEffect(() => {
     if (exitPortsOptions.length === 1) {
@@ -130,15 +134,13 @@ const Transportation = ({
               options={exitPortsOptions}
               value={values.exitPortId.toString()}
               onChange={(val) => setValue("transportation.exitPortId", Number(val))}
-              loading={!locationRoutes.data || locationRoutes.isLoading}
+              loading={locationRoutes.isFetching}
             />
             <Autocomplete
-              options={
-                locations.data?.map((location) => ({ value: location.id.toString(), label: location.name })) || []
-              }
-              value={values.shippingLocationId.toString()}
-              onChange={(val) => setValue("transportation.shippingLocationId", Number(val))}
-              loading={!locations.data}
+              options={destinationPorts.data?.map((port) => ({ value: port.id.toString(), label: port.name })) || []}
+              value={values.deliveryPortId.toString()}
+              onChange={(val) => setValue("transportation.deliveryPortId", Number(val))}
+              loading={!destinationPorts.data}
             />
           </div>
         </div>
