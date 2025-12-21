@@ -89,6 +89,27 @@ const Transportation = ({
     [exitPort],
   );
 
+  const totalPrice = useMemo(() => {
+    const auctionPrice = auctionFee.data?.totalCost || 0;
+    const groundFeePrice = groundFee.data?.price || 0;
+    let insurancePrice = 0;
+    if (values.insuranceType !== "basic" && user.data) {
+      const percent =
+        values.insuranceType === "auction" ? user.data.insuranceByAuctionFee : user.data?.insuranceByWarehouseFee;
+      insurancePrice = (auctionPrice * percent) / 100;
+    }
+    const titlePrice = titles.data?.find((title) => title.id === values.titleDocumentId)?.price || 0;
+
+    const sum = auctionPrice + groundFeePrice + insurancePrice + titlePrice;
+    return sum;
+  }, [
+    auctionFee.data?.totalCost,
+    groundFee.data?.price,
+    titles.data,
+    user.data,
+    values.insuranceType,
+    values.titleDocumentId,
+  ]);
 
   useEffect(() => {
     if (exitPortsOptions.length === 1) {
@@ -244,12 +265,11 @@ const Transportation = ({
           disabled={user.isLoading || !user.data}
         />
         <PriceSection
-          price={groundFee.data?.price || 0}
+          price={totalPrice}
           label="Price:"
           loading={groundFee.isFetching}
-          // showCallToAction={groundFee.data && (!groundFee.data.groundRate || !groundFee.data.oceanRate)}
+          showCallToAction={groundFee.data && (!groundFee.data.groundRate || !groundFee.data.oceanRate)}
         />
-        {totalPrice}
       </div>
     </div>
   );

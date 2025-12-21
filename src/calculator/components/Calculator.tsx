@@ -53,29 +53,24 @@ const Calculator = ({ auction }: { auction: Auction }) => {
     auction: watch("auction.auction"),
   });
 
+  const transportationValues = watch("transportation");
+
   const totalPrice = useMemo(() => {
     const auctionPrice = auctionFee.data?.totalCost || 0;
     const groundFeePrice = groundFee.data?.price || 0;
     let insurancePrice = 0;
-    if (watch("transportation.insuranceType") !== "basic" && user.data) {
+    if (transportationValues.insuranceType !== "basic" && user.data) {
       const percent =
-        watch("transportation.insuranceType") === "auction"
+        transportationValues.insuranceType === "auction"
           ? user.data.insuranceByAuctionFee
-          : user.data?.insuranceByWarehouseFee;
+          : user.data.insuranceByWarehouseFee;
       insurancePrice = (auctionPrice * percent) / 100;
     }
-    const titlePrice = titles.data?.find((title) => title.id === watch("transportation.titleDocumentId"))?.price || 0;
+    const titlePrice = titles.data?.find((title) => title.id === transportationValues.titleDocumentId)?.price || 0;
 
     const sum = auctionPrice + groundFeePrice + insurancePrice + titlePrice;
     return sum;
-  }, [
-    auctionFee.data?.totalCost,
-    groundFee.data?.price,
-    titles.data,
-    user.data,
-    watch("transportation.insuranceType"),
-    watch("transportation.titleDocumentId"),
-  ]);
+  }, [auctionFee.data?.totalCost, groundFee.data?.price, titles.data, user.data, transportationValues]);
 
   // Listen for lot details from content script
   useEffect(() => {
@@ -108,6 +103,7 @@ const Calculator = ({ auction }: { auction: Auction }) => {
           titles={titles}
           setTitleQuery={setTitleQuery}
         />
+        {totalPrice}
       </div>
     </div>
   );
