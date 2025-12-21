@@ -14,15 +14,15 @@ export function matchAuctionUrl(url: string): "copart" | "iaai" | null {
   return null;
 }
 
-export function injectReactBefore(
-  component: () => ReactNode,
-  targetElement: Element,
-  id?: string,
-): { rootElement: HTMLElement; reactRoot: Root; shadowRoot: ShadowRoot } {
+export function injectReactBefore(component: () => ReactNode, targetElement: Element, id?: string) {
   // Create host container
   const host = document.createElement("div");
   if (id) host.id = id;
 
+  if (id && document.getElementById(id)) {
+    console.log(`[injectReactBefore] Already injected: ${id}`);
+    return;
+  }
   // Insert before target element
   targetElement.parentNode?.insertBefore(host, targetElement);
 
@@ -32,19 +32,42 @@ export function injectReactBefore(
   // Optional CSS reset
   const resetStyle = document.createElement("style");
   resetStyle.textContent = `
-      :host { all: initial; display: block; }
-    `;
+    :host { all: initial; display: block; }
+  `;
   shadow.appendChild(resetStyle);
+
+  // Include extension CSS
+  const cssLink = document.createElement("link");
+  cssLink.rel = "stylesheet";
+  cssLink.href = chrome.runtime.getURL("assets/content.css");
+  shadow.appendChild(cssLink);
 
   // Create container for React
   const container = document.createElement("div");
   shadow.appendChild(container);
 
-  // Render React component
-  const reactRoot = createRoot(container);
-  reactRoot.render(component());
+  let reactRoot: Root | undefined;
 
-  return { rootElement: host, reactRoot, shadowRoot: shadow };
+  // Wait until CSS loads before rendering
+  const renderReact = () => {
+    if (!reactRoot) {
+      reactRoot = createRoot(container);
+      reactRoot.render(component());
+    }
+  };
+
+  cssLink.addEventListener("load", renderReact);
+  cssLink.addEventListener("error", () => {
+    console.warn("[injectReactBefore] Failed to load CSS, rendering anyway");
+    renderReact(); // render even if CSS fails
+  });
+
+  // If CSS is already loaded (cached), render immediately
+  if ((cssLink.sheet as CSSStyleSheet)?.cssRules.length >= 0) {
+    renderReact();
+  }
+
+  return;
 }
 
 export function tryFindElement(
@@ -103,7 +126,7 @@ export const injector = async (url: string, previousController?: AbortController
     console.error("[CP]: Invalid URL", url);
     return null;
   }
-  const selector = auction === "iaai" ? ".bid-info-marketing-description" : ".bid-information-section.cprt-panel";
+  const selector = auction === "iaai" ? "#vdActionInfo" : ".bid-information-section.cprt-panel";
 
   const { promise, controller } = tryFindElement(selector, undefined, undefined, previousController);
   console.log("[CP]: Promise:", promise, "Controller:", controller);
@@ -111,7 +134,7 @@ export const injector = async (url: string, previousController?: AbortController
     const el = await promise;
     console.log("[CP]: Element:", el);
     if (el) {
-      injectReactBefore(() => <Calculator />, el);
+      injectReactBefore(() => <Calculator />, el, "cargopolo-calculator-root");
 
       console.log("[CP]: Found element:", el);
       // TODO: inject your React component here
