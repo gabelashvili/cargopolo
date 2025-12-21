@@ -1,4 +1,3 @@
-import { useState } from "react";
 import Autocomplete from "../../ui/autocomplete/autocomplete";
 import Label from "../../ui/label/label";
 import BigSuvIcon from "../../ui/veh-type-icons/BigSuvIcon";
@@ -19,6 +18,8 @@ import type { UseFormSetValue } from "react-hook-form";
 import OptionSelector from "../../ui/option-selector/option-selector";
 import { useLocations } from "../../services/locations/locations-queries";
 import type { Auction } from "../../../types/common";
+import { useLocationRoutes } from "../../services/location-routes/location-routes-queries";
+import { useEffect, useMemo } from "react";
 
 export const VehicleTypes = {
   sedan: "Sedan",
@@ -62,7 +63,18 @@ const Transportation = ({
   auction: Auction;
 }) => {
   const locations = useLocations(auction);
-  console.log(values, 2223);
+  const locationRoutes = useLocationRoutes(values.shippingLocationId);
+  const exitPort = locationRoutes.data?.[0].exitPort;
+  const exitPortsOptions = useMemo(
+    () => (exitPort ? [{ value: exitPort.id.toString(), label: exitPort.name }] : []),
+    [exitPort],
+  );
+
+  useEffect(() => {
+    if (exitPortsOptions.length === 1) {
+      setValue("transportation.exitPortId", Number(exitPortsOptions[0].value));
+    }
+  }, [exitPort, exitPortsOptions, setValue]);
   return (
     <div className="calculator-transportation">
       <div className="calculator-transportation-vehicle-type">
@@ -107,17 +119,18 @@ const Transportation = ({
           <Autocomplete
             options={locations.data?.map((location) => ({ value: location.id.toString(), label: location.name })) || []}
             value={values.shippingLocationId.toString()}
-            onChange={(val) => setValue("transportation.shippingLocationId", Number(val))}
+            onChange={(val) => {
+              setValue("transportation.shippingLocationId", Number(val));
+              setValue("transportation.exitPortId", NaN);
+            }}
             loading={!locations.data}
           />
           <div className="calculator-transportation-shipping-info-item-ports">
             <Autocomplete
-              options={
-                locations.data?.map((location) => ({ value: location.id.toString(), label: location.name })) || []
-              }
-              value={values.shippingLocationId.toString()}
-              onChange={(val) => setValue("transportation.shippingLocationId", Number(val))}
-              loading={!locations.data}
+              options={exitPortsOptions}
+              value={values.exitPortId.toString()}
+              onChange={(val) => setValue("transportation.exitPortId", Number(val))}
+              loading={!locationRoutes.data || locationRoutes.isLoading}
             />
             <Autocomplete
               options={
