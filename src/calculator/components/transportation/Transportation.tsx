@@ -26,6 +26,7 @@ import PriceSection from "../PriceSection";
 import type { UseQueryResult } from "@tanstack/react-query";
 import type { GroundFeeResponse } from "../../services/ground-fee/ground-fee";
 import type { UserData } from "../../services/user/user";
+import Radio from "../../ui/radio/radio";
 
 export const VehicleTypes = {
   sedan: "Sedan",
@@ -94,6 +95,8 @@ const Transportation = ({
       setValue("transportation.deliveryPortId", user.data.mainDestinationPort);
     }
   }, [setValue, user.data]);
+
+  console.log(user.data);
   return (
     <div className="calculator-transportation">
       <div className="calculator-transportation-vehicle-type">
@@ -208,6 +211,19 @@ const Transportation = ({
               </table>
             );
           }}
+        />
+      </div>
+      <div className="calculator-transportation-insurance-type">
+        <Label>Insurance</Label>
+        <Radio
+          name="insuranceType"
+          options={[
+            { value: "auction", label: `${user.data?.insuranceByAuctionFee}% (with auction photos)` },
+            { value: "warehouse", label: `${user.data?.insuranceByWarehouseFee}% (with warehouse photos)` },
+            { value: "basic", label: "Basic" },
+          ]}
+          value={values.insuranceType}
+          onChange={(val) => setValue("transportation.insuranceType", val as "basic" | "auction" | "warehouse")}
         />
       </div>
       <PriceSection

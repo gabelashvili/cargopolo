@@ -140,3 +140,9 @@
     white-space: nowrap !important;
   }
 }
+
+.calculator-transportation-insurance-type {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 8px !important;
+}
