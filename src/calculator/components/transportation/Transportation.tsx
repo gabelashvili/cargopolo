@@ -26,6 +26,7 @@ import type { UserData } from "../../services/user/user";
 import Radio from "../../ui/radio/radio";
 import type { AuctionCalculationRes } from "../../services/auction/auction";
 import type { Title } from "../../services/titles/titles";
+import type { Location } from "../../services/locations/locations";
 
 export const VehicleTypes = {
   sedan: "Sedan",
