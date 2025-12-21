@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import type { Auction, LotDetails } from "../../types/common";
 import "./calculator.scss";
 import Header from "./header/Header";
@@ -21,6 +21,7 @@ const Calculator = ({ auction }: { auction: Auction }) => {
   const [titleQuery, setTitleQuery] = useState<string>("");
   const titles = useTitles(titleQuery);
   const locations = useLocations(auction);
+  const isInitiaLocationSet = useRef(false);
 
   const { watch, setValue } = useForm<FormData>({
     resolver: zodResolver(schema),
@@ -90,18 +91,21 @@ const Calculator = ({ auction }: { auction: Auction }) => {
         setLotDetails(res);
       }
     }
-  }, [auction, lotDetails]);
+  }, [auction]);
 
   useEffect(() => {
-    if (lotDetails && !selectedLocation) {
+    if (lotDetails && !selectedLocation && !isInitiaLocationSet.current) {
       const location = locations.data?.find(
         (location) => location.name === `${lotDetails.saleState}-${lotDetails.saleCity}`,
       );
       if (location) {
+        isInitiaLocationSet.current = true;
         setValue("transportation.shippingLocationId", location.id);
       }
     }
   }, [locations.data, lotDetails, selectedLocation, setValue]);
+
+  console.log("isInitiaLocationSet", totalPrice());
 
   return (
     <div className="calculator">
