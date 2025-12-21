@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Autocomplete from "../../ui/autocomplete/autocomplete";
 import Label from "../../ui/label/label";
 import BigSuvIcon from "../../ui/veh-type-icons/BigSuvIcon";
@@ -13,7 +14,6 @@ import SuvIcon from "../../ui/veh-type-icons/SuvIcon";
 import TruckIcon from "../../ui/veh-type-icons/TruckIcon";
 import VanIcon from "../../ui/veh-type-icons/VanIcon";
 import "./transportation.scss";
-import clsx from "clsx";
 
 export const VehicleTypes = {
   sedan: "Sedan",
@@ -48,28 +48,26 @@ const iconsPerType: Record<string, React.ComponentType> = {
 };
 
 const Transportation = () => {
+  const [selectedVehicleType, setSelectedVehicleType] = useState<string | null>(null);
   return (
     <div className="calculator-transportation">
       <div className="calculator-transportation-vehicle-type">
         <Label>Transportation</Label>
         <Autocomplete
           placeholder="Choose Vehichle type"
-          required
           options={Object.values(VehicleTypes).map((type) => ({ value: type, label: type }))}
-          renderOption={(props) => {
-            const Icon = iconsPerType[getNormalizedKey(props.option.label)];
+          value={selectedVehicleType}
+          onChange={setSelectedVehicleType}
+          renderOption={({ option }) => {
+            const Icon = iconsPerType[getNormalizedKey(option.label)];
             return (
-              <div
-                className={clsx(
-                  "calculator-transportation-vehicle-type-option",
-                  props.isSelected && "selected",
-                  props.isHighlighted && "highlighted",
+              <div className="calculator-transportation-vehicle-type-option">
+                {Icon && (
+                  <div className="calculator-transportation-vehicle-type-icon">
+                    <Icon />
+                  </div>
                 )}
-              >
-                <div style={{ width: 48, height: 16, color: "#8E8E8E" }}>
-                  <Icon style={{ width: 48, height: 20 }} />
-                </div>
-                <span>{props.option.label}</span>
+                <span>{option.label}</span>
               </div>
             );
           }}

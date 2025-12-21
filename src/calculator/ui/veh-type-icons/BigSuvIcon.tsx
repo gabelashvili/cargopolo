@@ -1,13 +1,8 @@
-import type { SVGProps } from 'react'
+import type { SVGProps } from "react";
 
 const BigSuvIcon = (props: SVGProps<SVGSVGElement>) => {
   return (
-    <svg
-      viewBox="0 0 542 188"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      {...props}
-    >
+    <svg viewBox="0 0 542 188" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
       <path
         d="M342.72 46.71C359.7 49.12 372.82 55.64 372.02 61.27C371.22 66.91 360.35 70.02 343.37 67.62C339.93 60.19 337.36 52.89 342.72 46.71Z"
         stroke="currentColor"
@@ -261,7 +256,7 @@ const BigSuvIcon = (props: SVGProps<SVGSVGElement>) => {
         strokeLinejoin="round"
       ></path>
     </svg>
-  )
-}
+  );
+};
 
-export default BigSuvIcon
+export default BigSuvIcon;

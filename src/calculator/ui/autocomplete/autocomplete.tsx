@@ -1,11 +1,12 @@
-import { useState, useRef, useEffect, type ReactNode } from "react";
+import * as React from "react";
 import Input from "../input/input";
 import { ChevronDownIcon } from "../icons";
+import { LoadingIcon } from "../icons";
 import "./autocomplete.scss";
 
 export interface AutocompleteOption {
-  value: string | number;
   label: string;
+  value: string;
 }
 
 export interface RenderOptionProps {
@@ -14,269 +15,319 @@ export interface RenderOptionProps {
   isSelected: boolean;
 }
 
-interface AutocompleteProps {
+export interface AutocompleteProps {
   options: AutocompleteOption[];
-  value?: AutocompleteOption | null;
-  onChange?: (option: AutocompleteOption | null) => void;
-  onInputChange?: (value: string) => void;
-  label?: string;
+  value: string | null;
+  onChange: (value: string) => void;
   placeholder?: string;
-  required?: boolean;
-  startIcon?: ReactNode;
-  disabled?: boolean;
   loading?: boolean;
-  noOptionsText?: string;
-  filterOptions?: (options: AutocompleteOption[], inputValue: string) => AutocompleteOption[];
-  renderOption?: (props: RenderOptionProps) => ReactNode;
+  renderOption?: (props: RenderOptionProps) => React.ReactNode;
 }
 
-const defaultFilterOptions = (options: AutocompleteOption[], inputValue: string): AutocompleteOption[] => {
-  const lowerInput = inputValue.toLowerCase();
-  return options.filter((option) => option.label.toLowerCase().includes(lowerInput));
-};
+const ClearIcon = ({ size = 20, color = "currentColor" }: { size?: number; color?: string }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke={color}
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+  >
+    <line x1="18" y1="6" x2="6" y2="18" />
+    <line x1="6" y1="6" x2="18" y2="18" />
+  </svg>
+);
 
-const Autocomplete = ({
+const Autocomplete: React.FC<AutocompleteProps> = ({
   options,
   value,
   onChange,
-  onInputChange,
-  label,
-  placeholder,
-  required,
-  startIcon,
-  disabled,
-  loading,
-  noOptionsText = "No options",
-  filterOptions = defaultFilterOptions,
+  placeholder = "Type to search...",
+  loading = false,
   renderOption,
-}: AutocompleteProps) => {
-  const [isOpen, setIsOpen] = useState(false);
-  const [searchValue, setSearchValue] = useState("");
-  const [highlightedIndex, setHighlightedIndex] = useState(-1);
-  const wrapperRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
-  const listRef = useRef<HTMLUListElement>(null);
+}) => {
+  const [isOpen, setIsOpen] = React.useState(false);
+  const [inputValue, setInputValue] = React.useState("");
+  const [highlightedIndex, setHighlightedIndex] = React.useState(-1);
+  const inputRef = React.useRef<HTMLInputElement>(null);
+  const listRef = React.useRef<HTMLUListElement>(null);
+  const containerRef = React.useRef<HTMLDivElement>(null);
+  const isKeyboardNavigationRef = React.useRef(false);
 
-  // Display value: when open show search query, when closed show selected label
-  const displayValue = isOpen ? searchValue : (value?.label ?? "");
+  // Find the selected option's label
+  const selectedOption = React.useMemo(() => options.find((opt) => opt.value === value) || null, [options, value]);
 
-  const filteredOptions = filterOptions(options, searchValue);
+  // Filter options based on input value
+  const filteredOptions = React.useMemo(() => {
+    if (!inputValue.trim()) {
+      return options;
+    }
+    const lowerInput = inputValue.toLowerCase();
+    return options.filter((option) => option.label.toLowerCase().includes(lowerInput));
+  }, [options, inputValue]);
 
-  const getSelectedIndex = () => {
-    if (!value) return -1;
-    return filteredOptions.findIndex((option) => option.value === value.value);
-  };
+  // Update input value when selected value changes from outside (only when closed)
+  React.useEffect(() => {
+    if (!isOpen) {
+      if (selectedOption) {
+        setInputValue(selectedOption.label);
+      } else {
+        setInputValue("");
+      }
+    }
+  }, [selectedOption, isOpen]);
 
-  const openDropdown = () => {
-    setSearchValue("");
-    setIsOpen(true);
-    // Get selected index from full options list since search is empty
-    const selectedIdx = value ? options.findIndex((opt) => opt.value === value.value) : -1;
-    setHighlightedIndex(selectedIdx);
-  };
+  // Close dropdown on outside click (SSR-safe) and restore selected value
+  React.useEffect(() => {
+    if (!isOpen) {
+      // Restore selected value label when closing
+      if (selectedOption) {
+        setInputValue(selectedOption.label);
+      } else {
+        setInputValue("");
+      }
+      return;
+    }
 
-  const closeDropdown = () => {
-    setIsOpen(false);
-    setSearchValue("");
-  };
-
-  const handleFocus = () => {
-    openDropdown();
-  };
-
-  useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (!wrapperRef.current || !isOpen) return;
-
-      const target = event.target as HTMLElement;
-      const path = event.composedPath();
-
-      // Check if click is on the input itself
-      const isInput = inputRef.current && (path.includes(inputRef.current) || target === inputRef.current);
-
-      // Check if click is inside the dropdown
-      const isDropdown = listRef.current && (path.includes(listRef.current) || listRef.current.contains(target));
-
-      // Check if click is on the label (which should close the dropdown)
-      const isLabel = target.classList.contains("input-label") || target.closest(".input-label");
-
-      // Check if click is on the toggle/clear icon
-      const isToggle = target.closest(".autocomplete-toggle") || target.closest(".autocomplete-clear");
-
-      // Close if:
-      // 1. Click is outside the wrapper entirely, OR
-      // 2. Click is on the label (and dropdown is open), OR
-      // 3. Click is not on input, dropdown, or toggle
-      if (isLabel || (!isInput && !isDropdown && !isToggle)) {
-        closeDropdown();
+      if (containerRef.current && !containerRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+        setHighlightedIndex(-1);
       }
     };
 
-    // Use capture phase to catch events before they bubble
-    document.addEventListener("mousedown", handleClickOutside, true);
-    return () => document.removeEventListener("mousedown", handleClickOutside, true);
-  }, [isOpen]);
+    // Use setTimeout to ensure this runs after the click event that opened it
+    const timeoutId = setTimeout(() => {
+      document.addEventListener("mousedown", handleClickOutside);
+    }, 0);
 
-  useEffect(() => {
+    return () => {
+      clearTimeout(timeoutId);
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen, selectedOption]);
+
+  // Scroll highlighted option into view
+  React.useEffect(() => {
     if (isOpen && highlightedIndex >= 0 && listRef.current) {
       const item = listRef.current.children[highlightedIndex] as HTMLElement;
-      item?.scrollIntoView({ block: "nearest" });
+      if (item) {
+        item.scrollIntoView({ block: "nearest" });
+      }
     }
   }, [highlightedIndex, isOpen]);
 
-  // Add native click handlers for Shadow DOM compatibility
-  useEffect(() => {
-    const listElement = listRef.current;
-    if (!listElement || !isOpen) return;
-
-    const handleNativeClick = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      const optionElement = target.closest("[data-option-index]");
-      if (optionElement) {
-        const index = parseInt(optionElement.getAttribute("data-option-index") || "-1", 10);
-        if (index >= 0 && index < filteredOptions.length) {
-          e.preventDefault();
-          e.stopPropagation();
-          e.stopImmediatePropagation();
-          const option = filteredOptions[index];
-          onChange?.(option);
-          closeDropdown();
-          inputRef.current?.blur();
-        }
-      }
-    };
-
-    listElement.addEventListener("click", handleNativeClick, true);
-    return () => {
-      listElement.removeEventListener("click", handleNativeClick, true);
-    };
-  }, [isOpen, filteredOptions, onChange]);
-
   const handleInputChange = (newValue: string | number) => {
     const strValue = String(newValue);
-    setSearchValue(strValue);
-    onInputChange?.(strValue);
+    setInputValue(strValue);
     setIsOpen(true);
     setHighlightedIndex(-1);
+
+    // If input matches an option exactly, select it
+    const exactMatch = options.find((opt) => opt.label.toLowerCase() === strValue.toLowerCase());
+    if (exactMatch) {
+      onChange(exactMatch.value);
+    } else {
+      // Clear selection if input doesn't match
+      onChange("");
+    }
   };
 
-  const handleOptionClick = (option: AutocompleteOption) => {
-    onChange?.(option);
-    closeDropdown();
-    inputRef.current?.blur();
+  const handleInputFocus = () => {
+    // Clear input when opening to allow fresh filtering
+    setInputValue("");
+    setHighlightedIndex(-1);
+    setIsOpen(true);
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (!isOpen) {
-      if (e.key === "ArrowDown" || e.key === "Enter") {
-        openDropdown();
-        return;
+  const handleInputKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (!isOpen && (e.key === "ArrowDown" || e.key === "ArrowUp" || e.key === "Enter")) {
+      setIsOpen(true);
+      // Find selected item index in filtered list
+      const selectedIndex = value ? filteredOptions.findIndex((opt) => opt.value === value) : -1;
+      if (e.key === "ArrowDown") {
+        // Start from selected item if it exists, otherwise from top
+        setHighlightedIndex(selectedIndex >= 0 ? selectedIndex : 0);
+      } else if (e.key === "ArrowUp") {
+        // Start from selected item if it exists, otherwise from bottom
+        setHighlightedIndex(selectedIndex >= 0 ? selectedIndex : filteredOptions.length - 1);
       }
+      return;
     }
 
-    const selectedIndex = getSelectedIndex();
+    // Find selected item index in filtered list for navigation
+    const selectedIndex = value ? filteredOptions.findIndex((opt) => opt.value === value) : -1;
 
     switch (e.key) {
       case "ArrowDown":
         e.preventDefault();
+        isKeyboardNavigationRef.current = true;
         setHighlightedIndex((prev) => {
-          // If nothing highlighted, start from selected item or beginning
-          if (prev < 0) return selectedIndex >= 0 ? selectedIndex : 0;
-          return prev < filteredOptions.length - 1 ? prev + 1 : 0;
+          // If nothing is highlighted, start from selected item (if exists) or top
+          if (prev < 0) {
+            return selectedIndex >= 0 ? selectedIndex : 0;
+          }
+          // Always move down from current highlighted index (works with mouse hover too)
+          const nextIndex = prev + 1;
+          return nextIndex < filteredOptions.length ? nextIndex : 0; // Wrap to first
         });
+        // Reset keyboard navigation flag after a short delay
+        setTimeout(() => {
+          isKeyboardNavigationRef.current = false;
+        }, 100);
         break;
+
       case "ArrowUp":
         e.preventDefault();
+        isKeyboardNavigationRef.current = true;
         setHighlightedIndex((prev) => {
-          // If nothing highlighted, start from selected item or end
-          if (prev < 0) return selectedIndex >= 0 ? selectedIndex : filteredOptions.length - 1;
-          return prev > 0 ? prev - 1 : filteredOptions.length - 1;
+          // If nothing is highlighted, start from selected item (if exists) or bottom
+          if (prev < 0) {
+            return selectedIndex >= 0 ? selectedIndex : filteredOptions.length - 1;
+          }
+          // Always move up from current highlighted index (works with mouse hover too)
+          const prevIndex = prev - 1;
+          return prevIndex >= 0 ? prevIndex : filteredOptions.length - 1; // Wrap to last
         });
+        // Reset keyboard navigation flag after a short delay
+        setTimeout(() => {
+          isKeyboardNavigationRef.current = false;
+        }, 100);
         break;
+
       case "Enter":
         e.preventDefault();
         if (highlightedIndex >= 0 && filteredOptions[highlightedIndex]) {
-          handleOptionClick(filteredOptions[highlightedIndex]);
-        } else if (selectedIndex >= 0) {
-          // If nothing highlighted but there's a selected item, select it
-          handleOptionClick(filteredOptions[selectedIndex]);
+          handleSelectOption(filteredOptions[highlightedIndex]);
         }
         break;
+
       case "Escape":
-        closeDropdown();
+        e.preventDefault();
+        setIsOpen(false);
+        setHighlightedIndex(-1);
+        // Restore selected value label on escape
+        if (selectedOption) {
+          setInputValue(selectedOption.label);
+        } else {
+          setInputValue("");
+        }
         inputRef.current?.blur();
         break;
     }
   };
 
+  const handleSelectOption = (option: AutocompleteOption) => {
+    onChange(option.value);
+    setInputValue(option.label);
+    setIsOpen(false);
+    setHighlightedIndex(-1);
+    inputRef.current?.blur();
+  };
+
+  const handleOptionClick = (option: AutocompleteOption) => {
+    handleSelectOption(option);
+  };
+
+  const handleOptionMouseEnter = (index: number) => {
+    // Only update highlight on mouse enter if not currently using keyboard navigation
+    if (!isKeyboardNavigationRef.current) {
+      setHighlightedIndex(index);
+    }
+  };
+
   const handleClear = (e: React.MouseEvent) => {
     e.stopPropagation();
-    onChange?.(null);
-    setSearchValue("");
+    onChange("");
+    setInputValue("");
     inputRef.current?.focus();
   };
 
+  const handleToggleDropdown = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isOpen) {
+      setIsOpen(false);
+      setHighlightedIndex(-1);
+    } else {
+      handleInputFocus();
+    }
+  };
+
+  // Build end icon - show loading if loading, clear if value exists, otherwise arrow
   const endIcon = (
-    <span className="autocomplete-toggle" onClick={() => !disabled && (isOpen ? closeDropdown() : openDropdown())}>
-      {value ? (
-        <span className="autocomplete-clear" onClick={handleClear}>
-          ×
+    <div className="autocomplete-end-icons">
+      {loading ? (
+        <span className="autocomplete-loading-icon">
+          <LoadingIcon size={20} />
+        </span>
+      ) : value ? (
+        <span className="autocomplete-clear-icon" onClick={handleClear} onMouseDown={(e) => e.preventDefault()}>
+          <ClearIcon size={20} />
         </span>
       ) : (
-        <ChevronDownIcon />
+        <span
+          className={`autocomplete-chevron-icon ${isOpen ? "open" : ""}`}
+          onClick={handleToggleDropdown}
+          onMouseDown={(e) => e.preventDefault()}
+        >
+          <ChevronDownIcon size={20} />
+        </span>
       )}
-    </span>
+    </div>
   );
 
   return (
-    <div className="autocomplete-root" ref={wrapperRef}>
+    <div ref={containerRef} className="autocomplete-container">
       <Input
         ref={inputRef}
         type="text"
-        value={displayValue}
+        value={inputValue}
         onChange={handleInputChange}
-        onFocus={handleFocus}
-        onKeyDown={handleKeyDown}
-        disabled={disabled}
-        label={label}
+        onFocus={handleInputFocus}
+        onKeyDown={handleInputKeyDown}
         placeholder={placeholder}
-        required={required}
-        startIcon={startIcon}
+        rootClassName="autocomplete-input-wrapper"
         endIcon={endIcon}
+        role="combobox"
+        aria-expanded={isOpen}
+        aria-autocomplete="list"
+        aria-controls="autocomplete-listbox"
+        aria-activedescendant={highlightedIndex >= 0 ? `autocomplete-option-${highlightedIndex}` : undefined}
       />
 
-      {true && (
-        <ul ref={listRef} className="autocomplete-dropdown">
-          {loading ? (
-            <li className="autocomplete-option autocomplete-loading">Loading...</li>
-          ) : filteredOptions.length === 0 ? (
-            <li className="autocomplete-option autocomplete-no-options">{noOptionsText}</li>
-          ) : (
-            filteredOptions.map((option, index) => {
-              const isHighlighted = highlightedIndex === index;
-              const isSelected = value?.value === option.value;
+      {isOpen && filteredOptions.length > 0 && (
+        <ul ref={listRef} id="autocomplete-listbox" role="listbox" className="autocomplete-listbox">
+          {filteredOptions.map((option, index) => {
+            const isHighlighted = index === highlightedIndex;
+            const isSelected = option.value === value;
 
-              return (
-                <div
-                  key={option.value}
-                  data-option-index={index}
-                  onMouseDown={(e) => {
-                    // Prevent the click outside handler from firing and handle click immediately
-                    e.preventDefault();
-                    e.stopPropagation();
-                    // Access native event for stopImmediatePropagation
-                    if (e.nativeEvent) {
-                      e.nativeEvent.stopImmediatePropagation();
-                    }
-                    handleOptionClick(option);
-                  }}
-                  onMouseEnter={() => setHighlightedIndex(index)}
-                >
-                  {renderOption ? renderOption({ option, isHighlighted, isSelected }) : option.label}
-                </div>
-              );
-            })
-          )}
+            return (
+              <li
+                key={option.value}
+                id={`autocomplete-option-${index}`}
+                role="option"
+                aria-selected={isSelected}
+                className={`autocomplete-option ${isHighlighted ? "highlighted" : ""} ${isSelected ? "selected" : ""}`}
+                onMouseDown={(e) => {
+                  e.preventDefault(); // Prevent input blur
+                  handleOptionClick(option);
+                }}
+                onMouseEnter={() => handleOptionMouseEnter(index)}
+              >
+                {renderOption ? renderOption({ option, isHighlighted, isSelected }) : option.label}
+              </li>
+            );
+          })}
+        </ul>
+      )}
+
+      {isOpen && filteredOptions.length === 0 && (
+        <ul id="autocomplete-listbox" role="listbox" className="autocomplete-listbox autocomplete-empty">
+          <li role="option" className="autocomplete-option autocomplete-no-results">
+            No options found
+          </li>
         </ul>
       )}
     </div>

@@ -7,11 +7,28 @@
     display: flex !important;
     flex-direction: column !important;
     gap: 8px;
+
     &-option {
       display: flex !important;
       flex-direction: row !important;
-      gap: 8px !important;
+      gap: 12px !important;
       align-items: center !important;
+      padding: 12px 0px !important;
+    }
+
+    &-icon {
+      width: 48px !important;
+      height: 20px !important;
+      color: #8e8e8e !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      flex-shrink: 0 !important;
+
+      svg {
+        width: 48px !important;
+        height: 20px !important;
+      }
     }
   }
 }
