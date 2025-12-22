@@ -116,7 +116,9 @@ const Calculator = ({ auction }: { auction: Auction }) => {
   useEffect(() => {
     if (lotDetails && !selectedLocation && !isInitiaLocationSet.current) {
       const location = locations.data?.find(
-        (location) => location.name === `${lotDetails.saleState}-${lotDetails.saleCity}`,
+        (location) =>
+          location?.name?.toLocaleLowerCase() ===
+          `${lotDetails.saleState.trim().toLowerCase()}-${lotDetails.saleCity.trim().toLowerCase()}`,
       );
       if (location) {
         isInitiaLocationSet.current = true;
@@ -124,7 +126,6 @@ const Calculator = ({ auction }: { auction: Auction }) => {
       }
     }
   }, [locations.data, lotDetails, selectedLocation, setValue]);
-
   return (
     <div>
       <div className="calculator">
