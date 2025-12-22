@@ -16,6 +16,7 @@ import { useTitles } from "../services/titles/titles-queries";
 import { useLocations } from "../services/locations/locations-queries";
 import Expedition from "./expedition/Expedition";
 import { calculateExpeditionPrice, calculateInsuranceFee } from "../utils/price-calculator";
+import { useCustomFee } from "../services/custom-fee/custom-fee-queries";
 
 const Calculator = ({ auction }: { auction: Auction }) => {
   const [lotDetails, setLotDetails] = useState<LotDetails | null>(null);
@@ -62,7 +63,14 @@ const Calculator = ({ auction }: { auction: Auction }) => {
     feeType: watch("auction.feeType"),
     auction: watch("auction.auction"),
   });
-
+  const customFee = useCustomFee({
+    auctionPrice: auctionFee.data?.totalCost || 0,
+    fuelType: "Diesel",
+    volume: 1,
+    year: new Date().getFullYear(),
+    vehicleType: "Sedan",
+  });
+  console.log("customFee", customFee.data);
   const transportationValues = watch("transportation");
   const expeditionValues = watch("expedition");
 
