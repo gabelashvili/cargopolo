@@ -1,0 +1,23 @@
+.calculator-total-price {
+  background: linear-gradient(135deg, #00A76F 0%, #007867 100%);
+  margin-top: 8px !important;
+  border-radius: 12px !important;
+  padding: 24px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 4px !important;
+  align-items: end;
+  p {
+    font-size: 16px !important;
+    font-weight: 400 !important;
+    color: #fff !important;
+  }
+  span {
+    font-weight: 500 !important;
+  }
+  &-currencies {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 12px !important;
+  }
+}

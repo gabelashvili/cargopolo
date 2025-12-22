@@ -18,6 +18,7 @@ import Expedition from "./expedition/Expedition";
 import { calculateExpeditionPrice, calculateInsuranceFee } from "../utils/price-calculator";
 import { useCustomFee } from "../services/custom-fee/custom-fee-queries";
 import Customs from "./customs/Customs";
+import TotalPrice from "./total-price/TotalPrice";
 
 const Calculator = ({ auction }: { auction: Auction }) => {
   const [lotDetails, setLotDetails] = useState<LotDetails | null>(null);
@@ -90,8 +91,8 @@ const Calculator = ({ auction }: { auction: Auction }) => {
   }, [transportationValues.insuranceType, auctionPrice, user.data]);
   const titlePrice = titles.data?.find((title) => title.id === transportationValues.titleDocumentId)?.price || 0;
   const totalPrice = useMemo(() => {
-    return auctionPrice + groundFeePrice + insurancePrice + titlePrice;
-  }, [auctionPrice, groundFeePrice, insurancePrice, titlePrice]);
+    return auctionPrice + groundFeePrice + insurancePrice + titlePrice + expeditionPrice;
+  }, [auctionPrice, groundFeePrice, insurancePrice, titlePrice, expeditionPrice]);
 
   // Listen for lot details from content script
   useEffect(() => {
@@ -121,34 +122,35 @@ const Calculator = ({ auction }: { auction: Auction }) => {
     }
   }, [locations.data, lotDetails, selectedLocation, setValue]);
 
-  console.log(lotDetails, 1213213);
   return (
-    <div className="calculator">
-      <Header />
-      <div className="calculator-content">
-        <Auctions auction={auction} values={watch("auction")} setValue={setValue} auctionFee={auctionFee} />
-        <Transportation
-          user={user}
-          values={watch("transportation")}
-          setValue={setValue}
-          groundFee={groundFee}
-          auctionFee={auctionFee}
-          titles={titles}
-          setTitleQuery={setTitleQuery}
-          locations={locations}
-        />
-        <Expedition
-          values={watch("expedition")}
-          setValue={setValue}
-          price={expeditionPrice}
-          loading={!user.data}
-          showCallToAction={isNaN(expeditionPrice)}
-        />
-        {user.data?.country.toLowerCase() === "ukraine" && (
-          <Customs values={watch("customs")} setValue={setValue} customFee={customFee} lotDetails={lotDetails} />
-        )}
-        {totalPrice}
+    <div>
+      <div className="calculator">
+        <Header />
+        <div className="calculator-content">
+          <Auctions auction={auction} values={watch("auction")} setValue={setValue} auctionFee={auctionFee} />
+          <Transportation
+            user={user}
+            values={watch("transportation")}
+            setValue={setValue}
+            groundFee={groundFee}
+            auctionFee={auctionFee}
+            titles={titles}
+            setTitleQuery={setTitleQuery}
+            locations={locations}
+          />
+          <Expedition
+            values={watch("expedition")}
+            setValue={setValue}
+            price={expeditionPrice}
+            loading={!user.data}
+            showCallToAction={isNaN(expeditionPrice)}
+          />
+          {user.data?.country.toLowerCase() === "ukraine" && (
+            <Customs values={watch("customs")} setValue={setValue} customFee={customFee} lotDetails={lotDetails} />
+          )}
+        </div>
       </div>
+      <TotalPrice totalPrice={totalPrice} customsPrice={customFee.data ?? 0} user={user.data} />
     </div>
   );
 };
