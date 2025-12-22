@@ -13,7 +13,6 @@ const TotalPrice = ({
   customsPrice: number;
   user: UserData | null;
 }) => {
-  console.log(user);
   return (
     <div className="calculator-total-price">
       {user?.country?.toLowerCase() !== "ukraine" ? (
