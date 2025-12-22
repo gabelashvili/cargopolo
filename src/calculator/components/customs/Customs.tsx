@@ -64,7 +64,6 @@ const Customs = ({
             value={isNaN(values.volume) ? "" : values.volume.toString().trim()}
             onChange={(v) => setValue("customs.volume", Number(v))}
             decimalScale={1}
-            s
           />
         ) : (
           <Autocomplete
@@ -75,7 +74,7 @@ const Customs = ({
           />
         )}
       </div>
-      <PriceSection label="Price:" price={customFee.data ?? 0} loading={customFee.isLoading} />
+      <PriceSection currency="EUR" label="Price:" price={customFee.data ?? 0} loading={customFee.isLoading} />
     </div>
   );
 };

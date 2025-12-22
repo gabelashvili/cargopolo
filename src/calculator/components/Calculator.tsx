@@ -42,7 +42,7 @@ const Calculator = ({ auction }: { auction: Auction }) => {
         exitPortId: NaN,
         deliveryPortId: NaN,
         insuranceType: "warehouse",
-        vehicleType: "",
+        vehicleType: "Sedan",
       },
       expedition: {
         type: "basic",
@@ -82,7 +82,7 @@ const Calculator = ({ auction }: { auction: Auction }) => {
 
   // prices
   const expeditionPrice = useMemo(() => {
-    if (user.data?.country?.toLowerCase() === "ukraine") {
+    if (user.data?.country?.toLowerCase() !== "ukraine") {
       return 0;
     }
     return calculateExpeditionPrice(expeditionValues.type, transportationValues.vehicleType, user.data || null);
