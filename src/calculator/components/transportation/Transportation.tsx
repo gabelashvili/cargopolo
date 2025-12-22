@@ -13,7 +13,7 @@ import SuvIcon from "../../ui/veh-type-icons/SuvIcon";
 import TruckIcon from "../../ui/veh-type-icons/TruckIcon";
 import VanIcon from "../../ui/veh-type-icons/VanIcon";
 import "./transportation.scss";
-import type { FormData } from "../../schema";
+import { VehicleTypes, type FormData } from "../../schema";
 import type { UseFormSetValue } from "react-hook-form";
 import OptionSelector from "../../ui/option-selector/option-selector";
 import { useLocationRoutes } from "../../services/location-routes/location-routes-queries";
@@ -27,21 +27,6 @@ import Radio from "../../ui/radio/radio";
 import type { AuctionCalculationRes } from "../../services/auction/auction";
 import type { Title } from "../../services/titles/titles";
 import type { Location } from "../../services/locations/locations";
-
-export const VehicleTypes = {
-  sedan: "Sedan",
-  smSuv: "Small, Medium SUV",
-  bigSuv: "Big SUV",
-  van: "Van",
-  sprinter: "Sprinter",
-  pickup: "Pickup",
-  heavyEquip: "Heavy equipment",
-  bobCat: "Bob Cat",
-  quadricycle: "Quadricycle",
-  motorcycle: "Motorcycle",
-  truck: "Truck",
-  boat: "Boat",
-} as const;
 
 const getNormalizedKey = (label: string) => label.replaceAll(",", "").replaceAll(" ", "");
 

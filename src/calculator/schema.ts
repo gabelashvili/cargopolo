@@ -1,5 +1,20 @@
 import { z } from "zod";
 
+export const VehicleTypes = {
+  sedan: "Sedan",
+  smSuv: "Small, Medium SUV",
+  bigSuv: "Big SUV",
+  van: "Van",
+  sprinter: "Sprinter",
+  pickup: "Pickup",
+  heavyEquip: "Heavy equipment",
+  bobCat: "Bob Cat",
+  quadricycle: "Quadricycle",
+  motorcycle: "Motorcycle",
+  truck: "Truck",
+  boat: "Boat",
+} as const;
+
 export const schema = z.object({
   auction: z.object({
     cost: z.number().min(0, "Cost must be at least 0"),
