@@ -6,7 +6,7 @@ export const calculateExpeditionPrice = (
   vehicleType: string,
   userData: UserData | null,
 ): number => {
-  if (!userData) return 0;
+  if (!userData || !vehicleType) return 0;
   let price = 0;
   if (expeditionType === "selfPickup") {
     price = userData.expeditionSelfPickupFee || 0;
@@ -20,8 +20,7 @@ export const calculateExpeditionPrice = (
   if (
     [VehicleTypes.sedan, VehicleTypes.bigSuv, VehicleTypes.smSuv].includes(
       vehicleType as "Sedan" | "Big SUV" | "Small, Medium SUV",
-    ) ||
-    vehicleType === ""
+    )
   ) {
     if (vehicleType !== VehicleTypes.sedan && vehicleType !== "") {
       price += 100;
