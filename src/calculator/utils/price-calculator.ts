@@ -1,4 +1,4 @@
-import { VehicleTypes } from "../schema";
+import { type FormData, VehicleTypes } from "../schema";
 import type { UserData } from "../services/user/user";
 
 export const calculateExpeditionPrice = (
@@ -30,4 +30,20 @@ export const calculateExpeditionPrice = (
     return NaN;
   }
   return price;
+};
+
+export const calculateInsuranceFee = (
+  insuranceType: FormData["transportation"]["insuranceType"],
+  auctionPrice: number,
+  userData: UserData | null,
+): number => {
+  if (!userData) return 0;
+  let feePercent = 0;
+  if (insuranceType === "auction") {
+    feePercent = userData.insuranceByAuctionFee || 0;
+  }
+  if (insuranceType === "warehouse") {
+    feePercent = userData.insuranceByWarehouseFee || 0;
+  }
+  return Number(((auctionPrice * feePercent) / 100).toFixed(2));
 };
