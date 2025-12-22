@@ -3,6 +3,7 @@ export interface UserData {
   mainDestinationPort: number;
   expeditionSelfPickupFee: number;
   expeditionComplexFee: number;
+  expeditionBasicFee: number;
   insuranceByAuctionFee: number;
   insuranceByWarehouseFee: number;
   // Add other user properties as needed

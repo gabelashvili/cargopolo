@@ -8,12 +8,13 @@ import Auctions from "./auction/Auctions";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { schema, type FormData } from "../schema";
-import Transportation from "./transportation/Transportation";
+import Transportation, { VehicleTypes } from "./transportation/Transportation";
 import { useGroundFee } from "../services/ground-fee/ground-fee-queries";
 import { useUser } from "../services/user/user-queries";
 import { useAuctionCalculation } from "../services/auction/auction-queries";
 import { useTitles } from "../services/titles/titles-queries";
 import { useLocations } from "../services/locations/locations-queries";
+import Expedition from "./expedition/Expedition";
 
 const Calculator = ({ auction }: { auction: Auction }) => {
   const [lotDetails, setLotDetails] = useState<LotDetails | null>(null);
@@ -39,6 +40,9 @@ const Calculator = ({ auction }: { auction: Auction }) => {
         insuranceType: "warehouse",
         vehicleType: "",
       },
+      expedition: {
+        type: "basic",
+      },
     },
   });
 
@@ -59,6 +63,33 @@ const Calculator = ({ auction }: { auction: Auction }) => {
   });
 
   const transportationValues = watch("transportation");
+  const expeditionValues = watch("expedition");
+
+  const getExpeditionPrice = () => {
+    if (!user.data) return 0;
+    let price = 0;
+    if (expeditionValues.type === "selfPickup") {
+      price = user.data?.expeditionSelfPickupFee || 0;
+    }
+    if (expeditionValues.type === "complex") {
+      price = user.data?.expeditionComplexFee || 0;
+    }
+    if (expeditionValues.type === "basic") {
+      price = user.data?.expeditionBasicFee || 0;
+    }
+    if (
+      [VehicleTypes.sedan, VehicleTypes.bigSuv, VehicleTypes.smSuv].includes(
+        transportationValues.vehicleType as "Sedan" | "Big SUV" | "Small, Medium SUV",
+      ) || transportationValues.vehicleType === ""
+    ) {
+      if (transportationValues.vehicleType !== "Sedan" && transportationValues.vehicleType !== "") {
+        price += 100;
+      }
+    } else {
+      price = NaN;
+    }
+    return price;
+  };
 
   const totalPrice = () => {
     const auctionPrice = auctionFee.data?.totalCost || 0;
@@ -121,6 +152,13 @@ const Calculator = ({ auction }: { auction: Auction }) => {
           titles={titles}
           setTitleQuery={setTitleQuery}
           locations={locations}
+        />
+        <Expedition
+          values={watch("expedition")}
+          setValue={setValue}
+          price={getExpeditionPrice()}
+          loading={!user.data}
+          showCallToAction={isNaN(getExpeditionPrice())}
         />
         {totalPrice()}
       </div>

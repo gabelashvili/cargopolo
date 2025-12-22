@@ -15,6 +15,9 @@ export const schema = z.object({
     insuranceType: z.enum(["basic", "auction", "warehouse"]),
     titleDocumentId: z.number(),
   }),
+  expedition: z.object({
+    type: z.enum(["selfPickup", "complex", "basic"]),
+  }),
 });
 
 export type FormData = z.infer<typeof schema>;
