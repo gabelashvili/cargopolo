@@ -82,6 +82,9 @@ const Calculator = ({ auction }: { auction: Auction }) => {
 
   // prices
   const expeditionPrice = useMemo(() => {
+    if (user.data?.country?.toLowerCase() === "ukraine") {
+      return 0;
+    }
     return calculateExpeditionPrice(expeditionValues.type, transportationValues.vehicleType, user.data || null);
   }, [expeditionValues.type, transportationValues.vehicleType, user.data]);
   const auctionPrice = auctionFee.data?.totalCost || 0;
@@ -138,19 +141,21 @@ const Calculator = ({ auction }: { auction: Auction }) => {
             setTitleQuery={setTitleQuery}
             locations={locations}
           />
-          <Expedition
-            values={watch("expedition")}
-            setValue={setValue}
-            price={expeditionPrice}
-            loading={!user.data}
-            showCallToAction={isNaN(expeditionPrice)}
-          />
+          {user.data?.country?.toLowerCase() === "ukraine" && (
+            <Expedition
+              values={watch("expedition")}
+              setValue={setValue}
+              price={expeditionPrice}
+              loading={!user.data}
+              showCallToAction={isNaN(expeditionPrice)}
+            />
+          )}
           {user.data?.country.toLowerCase() === "ukraine" && (
             <Customs values={watch("customs")} setValue={setValue} customFee={customFee} lotDetails={lotDetails} />
           )}
         </div>
       </div>
-      <TotalPrice totalPrice={totalPrice} customsPrice={customFee.data ?? 0} user={user.data} />
+      <TotalPrice totalPrice={totalPrice} customsPrice={customFee.data ?? 0} user={user.data || null} />
     </div>
   );
 };

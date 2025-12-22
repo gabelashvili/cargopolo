@@ -11,7 +11,7 @@ const TotalPrice = ({
 }: {
   totalPrice: number;
   customsPrice: number;
-  user: UserData;
+  user: UserData | null;
 }) => {
   console.log(user);
   return (
