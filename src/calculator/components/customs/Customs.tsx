@@ -5,6 +5,8 @@ import "./customs.scss";
 import { CustomFuelType, type FormData } from "../../schema";
 import type { UseQueryResult } from "@tanstack/react-query";
 import PriceSection from "../PriceSection";
+import type { LotDetails } from "../../../types/common";
+import { useEffect } from "react";
 
 const years = Array.from({ length: 51 }, (_, i) => new Date().getFullYear() - i);
 const engineVolumes = Array.from({ length: 91 }, (_, i) => 1 + i / 10);
@@ -13,11 +15,31 @@ const Customs = ({
   values,
   setValue,
   customFee,
+  lotDetails,
 }: {
   values: FormData["customs"];
   setValue: UseFormSetValue<FormData>;
   customFee: UseQueryResult<number, Error>;
+  lotDetails: LotDetails | null;
 }) => {
+  useEffect(() => {
+    if (lotDetails) {
+      const foundYear = years.find((x) => x === lotDetails.releaseYear);
+      if (foundYear) {
+        setValue("customs.releaseYear", foundYear);
+      }
+      const foundFuelType = Object.values(CustomFuelType).find((x) => x === lotDetails.engineType);
+      if (foundFuelType) {
+        setValue("customs.fuelType", foundFuelType);
+      }
+      const foundVolume = engineVolumes.find(
+        (x) => x === Number(lotDetails.engineInformation.split(" ")[0].replace("L", "")),
+      );
+      if (foundVolume) {
+        setValue("customs.volume", foundVolume);
+      }
+    }
+  }, [lotDetails, setValue]);
   return (
     <div className="calculator-customs">
       <Label>Customs (Ukraine)</Label>

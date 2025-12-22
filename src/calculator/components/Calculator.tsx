@@ -121,6 +121,7 @@ const Calculator = ({ auction }: { auction: Auction }) => {
     }
   }, [locations.data, lotDetails, selectedLocation, setValue]);
 
+  console.log(lotDetails, 1213213);
   return (
     <div className="calculator">
       <Header />
@@ -143,7 +144,7 @@ const Calculator = ({ auction }: { auction: Auction }) => {
           loading={!user.data}
           showCallToAction={isNaN(expeditionPrice)}
         />
-        <Customs values={watch("customs")} setValue={setValue} customFee={customFee} />
+        <Customs values={watch("customs")} setValue={setValue} customFee={customFee} lotDetails={lotDetails} />
         {totalPrice}
       </div>
     </div>
