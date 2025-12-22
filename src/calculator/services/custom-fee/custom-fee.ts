@@ -8,9 +8,7 @@ export interface CustomFeeRequestParams {
 
 interface CustomFeeApiResponse {
   status: string;
-  data: {
-    data: number;
-  };
+  data: number;
 }
 
 export const getCustomFeeApi = async (params: CustomFeeRequestParams): Promise<number> => {
@@ -34,8 +32,7 @@ export const getCustomFeeApi = async (params: CustomFeeRequestParams): Promise<n
     }
 
     const result = (await response.json()) as CustomFeeApiResponse;
-    console.log(result.data, 22);
-    return result.data.data;
+    return result.data;
   } catch (error) {
     console.error("Error getting custom fee:", error);
     throw error;
