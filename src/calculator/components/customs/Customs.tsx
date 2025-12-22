@@ -18,7 +18,6 @@ const Customs = ({
   setValue: UseFormSetValue<FormData>;
   customFee: UseQueryResult<number, Error>;
 }) => {
-  console.log(customFee);
   return (
     <div className="calculator-customs">
       <Label>Customs (Ukraine)</Label>

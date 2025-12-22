@@ -17,21 +17,14 @@ export async function parseLotDetails(url: string): Promise<LotDetails | null> {
       // For Copart, try parsing even if URL pattern doesn't match exactly
       // (in case of route changes or different URL formats)
       if (isCopartDomain(url)) {
-        console.log(
-          "[Cargopolo] Parsing Copart URL:",
-          url,
-          "Pattern match:",
-          isCopartLotUrl(url),
-        );
+        console.log("[Cargopolo] Parsing Copart URL:", url, "Pattern match:", isCopartLotUrl(url));
         const result = parseCopart(fullHtml);
         if (result) {
           return result;
         }
         // If parsing failed but we're on Copart domain, log for debugging
         if (isCopartLotUrl(url)) {
-          console.warn(
-            "[Cargopolo] Copart URL matched pattern but parsing failed",
-          );
+          console.warn("[Cargopolo] Copart URL matched pattern but parsing failed");
         }
       }
     }
