@@ -7,6 +7,7 @@ import type { UseQueryResult } from "@tanstack/react-query";
 import PriceSection from "../PriceSection";
 import type { LotDetails } from "../../../types/common";
 import { useEffect } from "react";
+import Input from "../../ui/input/input";
 
 const years = Array.from({ length: 51 }, (_, i) => new Date().getFullYear() - i);
 const engineVolumes = Array.from({ length: 91 }, (_, i) => 1 + i / 10);
@@ -35,7 +36,7 @@ const Customs = ({
       const foundVolume = engineVolumes.find(
         (x) => x === Number(lotDetails.engineInformation.split(" ")[0].replace("L", "")),
       );
-      if (foundVolume) {
+      if (foundVolume && foundFuelType !== "electric") {
         setValue("customs.volume", foundVolume);
       }
     }
@@ -56,12 +57,23 @@ const Customs = ({
           value={values.fuelType}
           onChange={(v) => setValue("customs.fuelType", v)}
         />
-        <Autocomplete
-          options={engineVolumes.map((x) => ({ value: x.toFixed(1), label: x.toFixed(1) }))}
-          placeholder="Engine Volume"
-          value={values.volume.toFixed(1)}
-          onChange={(v) => setValue("customs.volume", Number(v))}
-        />
+        {values.fuelType === "electric" ? (
+          <Input
+            type="number"
+            placeholder="Engine Volume"
+            value={isNaN(values.volume) ? "" : values.volume.toString().trim()}
+            onChange={(v) => setValue("customs.volume", Number(v))}
+            decimalScale={1}
+            s
+          />
+        ) : (
+          <Autocomplete
+            options={engineVolumes.map((x) => ({ value: x.toFixed(1), label: x.toFixed(1) }))}
+            placeholder="Engine Volume"
+            value={values.volume.toFixed(1)}
+            onChange={(v) => setValue("customs.volume", Number(v))}
+          />
+        )}
       </div>
       <PriceSection label="Price:" price={customFee.data ?? 0} loading={customFee.isLoading} />
     </div>
