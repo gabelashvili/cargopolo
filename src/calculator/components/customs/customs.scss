@@ -1,0 +1,11 @@
+.calculator-customs {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  &-inputs {
+    display: flex;
+    flex-direction: row;
+    gap: 8px;
+  }
+}

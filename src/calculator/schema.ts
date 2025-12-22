@@ -15,6 +15,13 @@ export const VehicleTypes = {
   boat: "Boat",
 } as const;
 
+export const CustomFuelType = {
+  gasoline: "Gasoline",
+  diesel: "Diesel",
+  hybrid: "Hybrid",
+  electric: "Electric",
+} as const;
+
 export const schema = z.object({
   auction: z.object({
     cost: z.number().min(0, "Cost must be at least 0"),
@@ -32,6 +39,11 @@ export const schema = z.object({
   }),
   expedition: z.object({
     type: z.enum(["selfPickup", "complex", "basic"]),
+  }),
+  customs: z.object({
+    releaseYear: z.number(),
+    fuelType: z.string(),
+    volume: z.number(),
   }),
 });
 

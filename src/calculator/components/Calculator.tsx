@@ -17,6 +17,7 @@ import { useLocations } from "../services/locations/locations-queries";
 import Expedition from "./expedition/Expedition";
 import { calculateExpeditionPrice, calculateInsuranceFee } from "../utils/price-calculator";
 import { useCustomFee } from "../services/custom-fee/custom-fee-queries";
+import Customs from "./customs/Customs";
 
 const Calculator = ({ auction }: { auction: Auction }) => {
   const [lotDetails, setLotDetails] = useState<LotDetails | null>(null);
@@ -45,6 +46,11 @@ const Calculator = ({ auction }: { auction: Auction }) => {
       expedition: {
         type: "basic",
       },
+      customs: {
+        releaseYear: NaN,
+        fuelType: "",
+        volume: NaN,
+      },
     },
   });
 
@@ -65,12 +71,11 @@ const Calculator = ({ auction }: { auction: Auction }) => {
   });
   const customFee = useCustomFee({
     auctionPrice: auctionFee.data?.totalCost || 0,
-    fuelType: "Diesel",
-    volume: 1,
-    year: new Date().getFullYear(),
-    vehicleType: "Sedan",
+    fuelType: watch("customs.fuelType").toLowerCase(),
+    volume: watch("customs.volume"),
+    year: watch("customs.releaseYear"),
+    vehicleType: watch("transportation.vehicleType"),
   });
-  console.log("customFee", customFee.data);
   const transportationValues = watch("transportation");
   const expeditionValues = watch("expedition");
 
@@ -116,6 +121,12 @@ const Calculator = ({ auction }: { auction: Auction }) => {
     }
   }, [locations.data, lotDetails, selectedLocation, setValue]);
 
+  useEffect(() => {
+    if (lotDetails) {
+      setValue("customs.releaseYear", lotDetails.releaseYear);
+    }
+  }, [lotDetails, setValue]);
+
   return (
     <div className="calculator">
       <Header />
@@ -138,6 +149,7 @@ const Calculator = ({ auction }: { auction: Auction }) => {
           loading={!user.data}
           showCallToAction={isNaN(expeditionPrice)}
         />
+        <Customs values={watch("customs")} setValue={setValue} customFee={customFee} />
         {totalPrice}
       </div>
     </div>

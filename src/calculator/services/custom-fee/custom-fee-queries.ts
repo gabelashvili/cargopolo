@@ -10,10 +10,16 @@ export const useCustomFee = (
   params: CustomFeeRequestParams | null | undefined,
   options?: Omit<UseQueryOptions<number, Error>, "queryKey" | "queryFn">,
 ) => {
+  console.log(
+    Object.values(params ?? {}).every((value) => {
+      console.log(value);
+      return !!value;
+    }),
+  );
   return useQuery<number, Error>({
     queryKey: customFeeKeys.byParams(params!),
     queryFn: () => getCustomFeeApi(params!),
-    enabled: !!params && Object.values(params).every((value) => value !== null && value !== undefined),
+    enabled: Object.values(params ?? {}).every((value) => !!value),
     ...options,
   });
 };
