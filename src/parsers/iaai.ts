@@ -1,7 +1,6 @@
 import type { LotDetails } from "../types/common";
 
-const IAAI_VEHICLE_URL_PATTERN =
-  /^https:\/\/www\.iaai\.com\/VehicleDetail\/\d+~[^/]+$/;
+const IAAI_VEHICLE_URL_PATTERN = /^https:\/\/www\.iaai\.com\/VehicleDetail\/\d+~[^/]+$/;
 
 export function isIaaiVehicleUrl(url: string) {
   return IAAI_VEHICLE_URL_PATTERN.test(url);
@@ -23,12 +22,24 @@ export function parseIaai(body: string): LotDetails | null {
 
     const data = JSON.parse(body.slice(jsonStart, endIndex).trim());
 
+    let engineType = data.inventoryView.attributes.FuelTypeCode;
+
+    if (engineType?.toLowerCase()?.includes("diesel")) {
+      engineType = "diesel";
+    } else if (engineType?.toLowerCase()?.includes("gas")) {
+      engineType = "gasoline";
+    } else if (engineType?.toLowerCase()?.includes("hybrid")) {
+      engineType = "hybrid";
+    } else if (engineType?.toLowerCase()?.includes("electric")) {
+      engineType = "electric";
+    }
     return {
       auction: "iaai",
       saleCity: data.inventoryView.attributes.City,
       saleState: data.inventoryView.attributes.State,
       releaseYear: parseInt(data.inventoryView.attributes.Year) as number,
       engineInformation: data.inventoryView.attributes.EngineInformation,
+      engineType,
     };
   } catch (error) {
     console.error("[Cargopolo] Failed to parse IAAI lot details:", error);

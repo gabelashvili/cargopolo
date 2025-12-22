@@ -16,10 +16,10 @@ export const VehicleTypes = {
 } as const;
 
 export const CustomFuelType = {
-  gasoline: "Gasoline",
-  diesel: "Diesel",
-  hybrid: "Hybrid",
-  electric: "Electric",
+  gasoline: "gasoline",
+  diesel: "diesel",
+  hybrid: "hybrid",
+  electric: "electric",
 } as const;
 
 export const schema = z.object({

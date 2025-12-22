@@ -1,8 +1,7 @@
 import type { LotDetails } from "../types/common";
 
 // Copart URL patterns - support both /lot/ and /vehicle/ paths
-const COPART_LOT_URL_PATTERN =
-  /^https:\/\/[^/]*\.?copart\.com\/(lot|vehicle)\/\d+\/[^/?#]*/;
+const COPART_LOT_URL_PATTERN = /^https:\/\/[^/]*\.?copart\.com\/(lot|vehicle)\/\d+\/[^/?#]*/;
 const COPART_DOMAIN_PATTERN = /copart\.com/;
 
 export function isCopartLotUrl(url: string) {
@@ -21,16 +20,25 @@ export function parseCopart(body: string): LotDetails | null {
       return null;
     }
 
-    const data = JSON.parse(
-      match[1].replace(/\\"/g, '"').replace(/\\\\/g, "\\"),
-    );
+    const data = JSON.parse(match[1].replace(/\\"/g, '"').replace(/\\\\/g, "\\"));
+    let engineType = data.ft;
 
+    if (engineType?.toLowerCase()?.includes("diesel")) {
+      engineType = "diesel";
+    } else if (engineType?.toLowerCase()?.includes("gas")) {
+      engineType = "gasoline";
+    } else if (engineType?.toLowerCase()?.includes("hybrid")) {
+      engineType = "hybrid";
+    } else if (engineType?.toLowerCase()?.includes("electric")) {
+      engineType = "electric";
+    }
     return {
       auction: "copart",
       saleCity: data.yn.split("-")[1].trim(),
       saleState: data.yn.split("-")[0].trim(),
       releaseYear: parseInt(data.lcy),
       engineInformation: data.egn,
+      engineType,
     };
   } catch (error) {
     console.error("[Cargopolo] Failed to parse Copart lot details:", error);

@@ -121,12 +121,6 @@ const Calculator = ({ auction }: { auction: Auction }) => {
     }
   }, [locations.data, lotDetails, selectedLocation, setValue]);
 
-  useEffect(() => {
-    if (lotDetails) {
-      setValue("customs.releaseYear", lotDetails.releaseYear);
-    }
-  }, [lotDetails, setValue]);
-
   return (
     <div className="calculator">
       <Header />
