@@ -6,6 +6,7 @@ export interface UserData {
   expeditionBasicFee: number;
   insuranceByAuctionFee: number;
   insuranceByWarehouseFee: number;
+  country: string;
   // Add other user properties as needed
 }
 

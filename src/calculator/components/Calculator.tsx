@@ -144,7 +144,9 @@ const Calculator = ({ auction }: { auction: Auction }) => {
           loading={!user.data}
           showCallToAction={isNaN(expeditionPrice)}
         />
-        <Customs values={watch("customs")} setValue={setValue} customFee={customFee} lotDetails={lotDetails} />
+        {user.data?.country.toLowerCase() === "ukraine" && (
+          <Customs values={watch("customs")} setValue={setValue} customFee={customFee} lotDetails={lotDetails} />
+        )}
         {totalPrice}
       </div>
     </div>
