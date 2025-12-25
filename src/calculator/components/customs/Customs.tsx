@@ -16,11 +16,13 @@ const Customs = ({
   values,
   setValue,
   customFee,
+  expeditionPrice,
   lotDetails,
 }: {
   values: FormData["customs"];
   setValue: UseFormSetValue<FormData>;
   customFee: UseQueryResult<number, Error>;
+  expeditionPrice: number;
   lotDetails: LotDetails | null;
 }) => {
   useEffect(() => {
@@ -74,7 +76,12 @@ const Customs = ({
           />
         )}
       </div>
-      <PriceSection currency="EUR" label="Price:" price={customFee.data ?? 0} loading={customFee.isLoading} />
+      <PriceSection
+        currency="EUR"
+        label="Price:"
+        price={(customFee.data ?? 0) + (expeditionPrice ?? 0)}
+        loading={customFee.isLoading}
+      />
     </div>
   );
 };

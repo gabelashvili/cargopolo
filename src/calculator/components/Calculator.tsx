@@ -94,8 +94,8 @@ const Calculator = ({ auction }: { auction: Auction }) => {
   }, [transportationValues.insuranceType, auctionPrice, user.data]);
   const titlePrice = titles.data?.find((title) => title.id === transportationValues.titleDocumentId)?.price || 0;
   const totalPrice = useMemo(() => {
-    return auctionPrice + groundFeePrice + insurancePrice + titlePrice + expeditionPrice;
-  }, [auctionPrice, groundFeePrice, insurancePrice, titlePrice, expeditionPrice]);
+    return auctionPrice + groundFeePrice + insurancePrice + titlePrice;
+  }, [auctionPrice, groundFeePrice, insurancePrice, titlePrice]);
 
   // Listen for lot details from content script
   useEffect(() => {
@@ -152,7 +152,13 @@ const Calculator = ({ auction }: { auction: Auction }) => {
             />
           )}
           {user.data?.country.toLowerCase() === "ukraine" && (
-            <Customs values={watch("customs")} setValue={setValue} customFee={customFee} lotDetails={lotDetails} />
+            <Customs
+              values={watch("customs")}
+              setValue={setValue}
+              customFee={customFee}
+              expeditionPrice={expeditionPrice}
+              lotDetails={lotDetails}
+            />
           )}
         </div>
       </div>

@@ -31,7 +31,7 @@ const Expedition = ({
         value={values.type}
         onChange={(val) => setValue("expedition.type", val as "selfPickup" | "complex" | "basic")}
       />
-      <PriceSection price={price} label="Price:" loading={loading} showCallToAction={showCallToAction} />
+      <PriceSection price={price} label="Price:" currency="EUR" loading={loading} showCallToAction={showCallToAction} />
     </div>
   );
 };
