@@ -25,15 +25,19 @@ const PriceSection = ({
     <div className={`price-section ${className || ""}`}>
       <div className="price-section-content">
         <span className="price-section-label">{label}</span>
-        <span className="price-section-value">
-          {loading ? (
-            <LoadingIcon />
-          ) : showCallToAction ? (
-            <p>Please Call</p>
-          ) : (
-            formattedCurrency(currency, Number(price))
-          )}
-        </span>
+        {price === "-" ? (
+          <span className="price-section-value">N/A</span>
+        ) : (
+          <span className="price-section-value">
+            {loading ? (
+              <LoadingIcon />
+            ) : showCallToAction ? (
+              <p>Please Call</p>
+            ) : (
+              formattedCurrency(currency, Number(price))
+            )}
+          </span>
+        )}
       </div>
     </div>
   );

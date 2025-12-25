@@ -59,7 +59,11 @@ export default function Auction({ values, setValue, auctionFee }: AuctionsProps)
           onChange={(v) => setValue("auction.feeType", v as "low" | "high")}
         />
       </div>
-      <PriceSection price={auctionFee.data?.totalCost || 0} label="Price:" loading={auctionFee.isFetching} />
+      <PriceSection
+        price={values.feeType === "high" ? "-" : auctionFee.data?.totalCost || 0}
+        label="Price:"
+        loading={auctionFee.isFetching}
+      />
     </section>
   );
 }

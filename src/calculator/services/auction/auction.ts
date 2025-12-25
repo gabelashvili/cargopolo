@@ -17,7 +17,7 @@ interface AuctionCalculationApiResponse {
 
 export const getAuctionCalculation = async (params: AuctionCalculationReqParams): Promise<AuctionCalculationRes> => {
   try {
-    if (params.cost === 0) {
+    if (params.cost === 0 || params.feeType === "high") {
       return {
         auctionfee: 0,
         fixedCost: 0,
