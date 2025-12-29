@@ -134,6 +134,10 @@ export const injector = async (url: string, previousController?: AbortController
     const el = await promise;
     console.log("[CP]: Element:", el);
     if (el) {
+      const parentElement = el.parentElement?.parentElement;
+      if (parentElement) {
+        parentElement.style.position = "static";
+      }
       injectReactBefore(() => <CalculatorWrapper auction={auction} />, el, "cargopolo-calculator-root");
 
       console.log("[CP]: Found element:", el);
