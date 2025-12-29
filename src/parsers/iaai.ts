@@ -6,8 +6,10 @@ export function isIaaiVehicleUrl(url: string) {
   return IAAI_VEHICLE_URL_PATTERN.test(url);
 }
 
-export function parseIaai(body: string): LotDetails | null {
+export async function parseIaai(): Promise<LotDetails | null> {
   try {
+    const response = await fetch(window.location.href);
+    const body = await response.text() as string;
     const openTagRegex = /<script[^>]*id=["']ProductDetailsVM["'][^>]*>/i;
     const openMatch = body.match(openTagRegex);
     if (!openMatch) return null;

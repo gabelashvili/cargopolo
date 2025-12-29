@@ -12,8 +12,10 @@ export function isCopartDomain(url: string) {
   return COPART_DOMAIN_PATTERN.test(url);
 }
 
-export function parseCopart(body: string): LotDetails | null {
+export async function parseCopart(): Promise<LotDetails | null> {
   try {
+    const response = await fetch(window.location.href);
+    const body = await response.text() as string;
     const match = body.match(/cachedSolrLotDetailsStr:\s*"((?:\\.|[^"])*)"/);
     if (!match) {
       console.warn("[Cargopolo] Could not extract cachedSolrLotDetailsStr");
@@ -21,6 +23,7 @@ export function parseCopart(body: string): LotDetails | null {
     }
 
     const data = JSON.parse(match[1].replace(/\\"/g, '"').replace(/\\\\/g, "\\"));
+    console.log(data, 22);
     let engineType = data.ft;
 
     if (engineType?.toLowerCase()?.includes("diesel")) {

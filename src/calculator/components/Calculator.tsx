@@ -100,16 +100,18 @@ const Calculator = ({ auction }: { auction: Auction }) => {
   // Listen for lot details from content script
   useEffect(() => {
     if (auction === "iaai") {
-      const res = parseIaai(document.documentElement.outerHTML);
-      if (res) {
-        setLotDetails(res);
-      }
+      parseIaai().then((res) => {
+        if (res) {
+          setLotDetails(res);
+        }
+      });
     }
     if (auction === "copart") {
-      const res = parseCopart(document.documentElement.outerHTML);
-      if (res) {
-        setLotDetails(res);
-      }
+      parseCopart().then((res) => {
+        if (res) {
+          setLotDetails(res);
+        }
+      });
     }
   }, [auction]);
 
@@ -118,7 +120,7 @@ const Calculator = ({ auction }: { auction: Auction }) => {
       const location = locations.data?.find(
         (location) =>
           location?.name?.toLocaleLowerCase() ===
-          `${lotDetails.saleState.trim().toLowerCase()}-${lotDetails.saleCity.trim().toLowerCase()}`,
+          `${lotDetails?.saleState?.trim().toLowerCase()}-${lotDetails?.saleCity?.trim().toLowerCase()}`,
       );
       if (location) {
         isInitiaLocationSet.current = true;
