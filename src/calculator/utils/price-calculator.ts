@@ -44,5 +44,5 @@ export const calculateInsuranceFee = (
   if (insuranceType === "warehouse") {
     feePercent = userData.insuranceByWarehouseFee || 0;
   }
-  return Number(((auctionPrice * feePercent) / 100).toFixed(2));
+  return Number(Math.max(((auctionPrice * feePercent) / 100), 50).toFixed(2));
 };

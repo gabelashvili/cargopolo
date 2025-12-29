@@ -27,6 +27,7 @@ import Radio from "../../ui/radio/radio";
 import type { AuctionCalculationRes } from "../../services/auction/auction";
 import type { Title } from "../../services/titles/titles";
 import type { Location } from "../../services/locations/locations";
+import { calculateExpeditionPrice, calculateInsuranceFee } from "../../utils/price-calculator";
 
 const getNormalizedKey = (label: string) => label.replaceAll(",", "").replaceAll(" ", "");
 
@@ -77,9 +78,7 @@ const Transportation = ({
     const groundFeePrice = groundFee.data?.price || 0;
     let insurancePrice = 0;
     if (values.insuranceType !== "basic" && user.data) {
-      const percent =
-        values.insuranceType === "auction" ? user.data.insuranceByAuctionFee : user.data?.insuranceByWarehouseFee;
-      insurancePrice = (auctionPrice * percent) / 100;
+      insurancePrice = calculateInsuranceFee(values.insuranceType, auctionPrice, user.data || null);
     }
     const titlePrice = titles.data?.find((title) => title.id === values.titleDocumentId)?.price || 0;
 

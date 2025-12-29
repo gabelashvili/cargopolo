@@ -41,7 +41,7 @@ const Calculator = ({ auction }: { auction: Auction }) => {
         shippingLocationId: NaN,
         exitPortId: NaN,
         deliveryPortId: NaN,
-        insuranceType: "warehouse",
+        insuranceType: "basic",
         vehicleType: "Sedan",
       },
       expedition: {
