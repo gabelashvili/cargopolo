@@ -36,7 +36,7 @@ const Customs = ({
         setValue("customs.fuelType", foundFuelType);
       }
       const foundVolume = engineVolumes.find(
-        (x) => x === Number(lotDetails.engineInformation.split(" ")[0].replace("L", "")),
+        (x) => x === Number(lotDetails?.engineInformation?.split(" ")?.[0]?.replace("L", "")),
       );
       if (foundVolume && foundFuelType !== "electric") {
         setValue("customs.volume", foundVolume);
