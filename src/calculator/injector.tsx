@@ -112,7 +112,7 @@ export function tryFindElement(
   return { promise, controller };
 }
 
-export const injector = async (url: string, previousController?: AbortController) => {
+export const injector = async (url: string, sessionKey?: string, previousController?: AbortController) => {
   console.log("[CP]: Injecting calculator for", url);
 
   // Abort previous search
@@ -138,7 +138,11 @@ export const injector = async (url: string, previousController?: AbortController
       if (parentElement) {
         parentElement.style.position = "static";
       }
-      injectReactBefore(() => <CalculatorWrapper auction={auction} />, el, "cargopolo-calculator-root");
+      injectReactBefore(
+        () => <CalculatorWrapper auction={auction} sessionKey={sessionKey} />,
+        el,
+        "cargopolo-calculator-root",
+      );
 
       console.log("[CP]: Found element:", el);
       // TODO: inject your React component here

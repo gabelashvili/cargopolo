@@ -20,13 +20,14 @@ import { useCustomFee } from "../services/custom-fee/custom-fee-queries";
 import Customs from "./customs/Customs";
 import TotalPrice from "./total-price/TotalPrice";
 
-const Calculator = ({ auction }: { auction: Auction }) => {
+const Calculator = ({ auction, sessionKey }: { auction: Auction; sessionKey?: string }) => {
   const [lotDetails, setLotDetails] = useState<LotDetails | null>(null);
-  const user = useUser("p9fYUDsqcgr6OcVXBZUY23prmhOcul1R3sW2gHYroOKlKb7qnGn8OAYA3Jnu");
+  const user = useUser(sessionKey);
   const [titleQuery, setTitleQuery] = useState<string>("");
   const titles = useTitles(titleQuery);
   const locations = useLocations(auction);
   const isInitiaLocationSet = useRef(false);
+  console.log("[CP]: Session:", sessionKey, user);
 
   const { watch, setValue } = useForm<FormData>({
     resolver: zodResolver(schema),

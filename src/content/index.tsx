@@ -5,21 +5,21 @@ import "./content.scss";
 
 let abortController: AbortController | undefined = undefined;
 
-async function handleRouteChange(url: string) {
+async function handleRouteChange(url: string, sessionKey?: string) {
   console.log("[CS] Route changed:", url);
-  abortController = (await injector(url, abortController)) ?? undefined;
+  abortController = (await injector(url, sessionKey, abortController)) ?? undefined;
 }
 
 function init() {
   console.log("[CS] Initializing content script");
-  handleRouteChange(location.href);
+  handleRouteChange(location.href, "");
 }
 
 chrome.runtime.onMessage.addListener((message) => {
   console.log("[CS] Message received:", message);
 
   if (message.type === "URL_CHANGED") {
-    handleRouteChange(message.url);
+    handleRouteChange(message.url, message.sessionKey);
   }
 });
 

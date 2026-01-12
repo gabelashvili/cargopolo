@@ -1,8 +1,15 @@
 async function sendUrlChangeMessage(tabId: number, url: string) {
+  const session = await chrome.storage.local.get("session");
+  const sessionKey = session.session;
+  console.log("[BG] Session key:", sessionKey);
+  if (!sessionKey) {
+    return;
+  }
   try {
     await chrome.tabs.sendMessage(tabId, {
       type: "URL_CHANGED",
       url: url,
+      sessionKey,
     });
   } catch (error) {
     // Content script might not be ready yet, ignore the error

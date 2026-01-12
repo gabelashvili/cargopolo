@@ -10,10 +10,10 @@ const queryClient = new QueryClient({
   },
 });
 
-const CalculatorWrapper = ({ auction }: { auction: Auction }) => {
+const CalculatorWrapper = ({ auction, sessionKey }: { auction: Auction; sessionKey?: string }) => {
   return (
     <QueryClientProvider client={queryClient}>
-      <Calculator auction={auction} />
+      <Calculator auction={auction} sessionKey={sessionKey} />
     </QueryClientProvider>
   );
 };
