@@ -1,7 +1,7 @@
 // Calculator SCSS Test File
 @use "../styles/fonts.scss" as *;
 
-* {
+:host * {
   padding: 0 !important;
   margin: 0 !important;
   box-sizing: border-box !important;
@@ -22,7 +22,7 @@ $calculator-background-gradient: linear-gradient(
   letter-spacing: 0.5px !important;
   border-radius: 12px !important;
 
-  * {
+  :host * {
     letter-spacing: 0.5px !important;
   }
 

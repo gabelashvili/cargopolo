@@ -12,22 +12,22 @@
   font-size: 14px !important;
 }
 
-*,
-*::before,
-*::after {
+:host *,
+:host *::before,
+:host *::after {
   box-sizing: border-box !important;
 }
 
-img,
-svg {
+:host img,
+:host svg {
   max-width: 100% !important;
   height: auto !important;
 }
 
-button,
-input,
-select,
-textarea {
+:host button,
+:host input,
+:host select,
+:host textarea {
   font-family: inherit !important;
   font-size: inherit !important;
 }
