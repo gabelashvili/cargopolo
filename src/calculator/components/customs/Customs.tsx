@@ -76,12 +76,7 @@ const Customs = ({
           />
         )}
       </div>
-      <PriceSection
-        currency="EUR"
-        label="Price:"
-        price={(customFee.data ?? 0) + (expeditionPrice ?? 0)}
-        loading={customFee.isLoading}
-      />
+      <PriceSection currency="USD" label="Price:" price={customFee.data ?? 0} loading={customFee.isLoading} />
     </div>
   );
 };

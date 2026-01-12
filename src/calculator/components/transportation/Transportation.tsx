@@ -80,9 +80,10 @@ const Transportation = ({
     if (values.insuranceType !== "basic" && user.data) {
       insurancePrice = calculateInsuranceFee(values.insuranceType, auctionPrice, user.data || null);
     }
+    console.log(insurancePrice, 22);
     const titlePrice = titles.data?.find((title) => title.id === values.titleDocumentId)?.price || 0;
 
-    const sum = auctionPrice + groundFeePrice + insurancePrice + titlePrice;
+    const sum = groundFeePrice + insurancePrice + titlePrice;
     return sum;
   }, [
     auctionFee.data?.totalCost,

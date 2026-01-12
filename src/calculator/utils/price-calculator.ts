@@ -36,7 +36,7 @@ export const calculateInsuranceFee = (
   auctionPrice: number,
   userData: UserData | null,
 ): number => {
-  if (!userData) return 0;
+  if (!userData || insuranceType === "basic") return 0;
   let feePercent = 0;
   if (insuranceType === "auction") {
     feePercent = userData.insuranceByAuctionFee || 0;
@@ -44,5 +44,5 @@ export const calculateInsuranceFee = (
   if (insuranceType === "warehouse") {
     feePercent = userData.insuranceByWarehouseFee || 0;
   }
-  return Number(Math.max(((auctionPrice * feePercent) / 100), 50).toFixed(2));
+  return Number(Math.max((auctionPrice * feePercent) / 100, 50).toFixed(2));
 };

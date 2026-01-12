@@ -6,11 +6,11 @@ const formattedCurrency = (currency: string, value: number) =>
 
 const TotalPrice = ({
   totalPrice,
-  customsPrice,
+  expeditionPrice,
   user,
 }: {
   totalPrice: number;
-  customsPrice: number;
+  expeditionPrice: number;
   user: UserData | null;
 }) => {
   return (
@@ -27,7 +27,7 @@ const TotalPrice = ({
             </p>
             <p>|</p>
             <p>
-              Euro: <span>{formattedCurrency("EUR", customsPrice)}</span>
+              Euro: <span>{formattedCurrency("EUR", expeditionPrice)}</span>
             </p>
           </div>
         </>
