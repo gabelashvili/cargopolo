@@ -17,9 +17,12 @@ interface LocationsApiResponse {
 
 export const getLocationsApi = async (appType: Auction): Promise<Location[]> => {
   try {
-    const response = await fetch(
-      `https://admin.cargopolo.com/api/calculator/locations?auctionId=${appType === "iaai" ? "90" : "89"}`,
-    );
+    const auctionsRequest = await fetch("https://admin.cargopolo.com/api/calculator/auctions");
+    const auctionsData = (await auctionsRequest.json()) as { data: { data: { id: number; name: string }[] } };
+    const auctionId = auctionsData.data.data.find(
+      (auction) => auction.name.toLowerCase() === appType.toLowerCase(),
+    )?.id;
+    const response = await fetch(`https://admin.cargopolo.com/api/calculator/locations?auctionId=${auctionId}`);
 
     if (!response.ok) {
       throw new Error(`Failed to fetch locations: ${response.statusText}`);
