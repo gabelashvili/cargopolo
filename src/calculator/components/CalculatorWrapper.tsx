@@ -11,11 +11,11 @@ const queryClient = new QueryClient({
 });
 
 const CalculatorWrapper = ({ auction, sessionKey }: { auction: Auction; sessionKey?: string }) => {
-  return (
+  return sessionKey ? (
     <QueryClientProvider client={queryClient}>
       <Calculator auction={auction} sessionKey={sessionKey} />
     </QueryClientProvider>
-  );
+  ) : null;
 };
 
 export default CalculatorWrapper;
