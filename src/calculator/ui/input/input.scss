@@ -19,6 +19,7 @@ $input-icon-spacing: 12px;
   .input-wrapper {
     position: relative !important;
     width: 100% !important;
+    display: flex !important;
 
     input {
       width: 100% !important;

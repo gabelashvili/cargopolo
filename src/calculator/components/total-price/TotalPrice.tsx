@@ -16,7 +16,7 @@ const TotalPrice = ({
   return (
     <div className="calculator-total-price">
       {user?.country?.toLowerCase() !== "ukraine" ? (
-        <p>
+        <p style={{ padding: 0, margin: 0 }}>
           Total Price: <span>{formattedCurrency("USD", totalPrice)}</span>
         </p>
       ) : (
