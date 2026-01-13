@@ -7,18 +7,17 @@ export async function parseLotDetails(url: string): Promise<LotDetails | null> {
     // For content script, use full document HTML (everything including and after body)
     if (typeof document !== "undefined" && document.documentElement) {
       // Get full HTML including everything after body tag
-      const fullHtml = document.documentElement.outerHTML;
 
       if (isIaaiVehicleUrl(url)) {
         console.log("[Cargopolo] Parsing IAAI URL:", url);
-        return parseIaai(fullHtml);
+        return parseIaai();
       }
 
       // For Copart, try parsing even if URL pattern doesn't match exactly
       // (in case of route changes or different URL formats)
       if (isCopartDomain(url)) {
         console.log("[Cargopolo] Parsing Copart URL:", url, "Pattern match:", isCopartLotUrl(url));
-        const result = parseCopart(fullHtml);
+        const result = parseCopart();
         if (result) {
           return result;
         }

@@ -15,7 +15,7 @@ export function isCopartDomain(url: string) {
 export async function parseCopart(): Promise<LotDetails | null> {
   try {
     const response = await fetch(window.location.href);
-    const body = await response.text() as string;
+    const body = (await response.text()) as string;
     const match = body.match(/cachedSolrLotDetailsStr:\s*"((?:\\.|[^"])*)"/);
     if (!match) {
       console.warn("[Cargopolo] Could not extract cachedSolrLotDetailsStr");
